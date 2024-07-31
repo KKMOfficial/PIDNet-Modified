@@ -24,11 +24,23 @@ class CrossEntropy(nn.Module):
 
     def forward(self, score, target):
 
+        # model can have multiple outputs, neat!
+        # print(f"[LOG-CRITERION] : score shape : {score.shape}")
         if config.MODEL.NUM_OUTPUTS == 1:
             score = [score]
 
+
         balance_weights = config.LOSS.BALANCE_WEIGHTS
         sb_weights = config.LOSS.SB_WEIGHTS
+
+        # print(f"[LOG-CRITERION] : balance weights : {balance_weights}")
+        # print(f"[LOG-CRITERION] : sb_weights : {sb_weights}")
+        # print(f"[LOG-CRITERION] : target shape : {target.shape}")
+        print(f"[LOG-CRITERION] : score lentth : {len(score)}")
+        print(f"[LOG-CRITERION] : score[0] lentth : {score[0].shape}")
+        print(f"[LOG-CRITERION] : score[1] lentth : {score[1].shape}")
+        # len(score)=4, balance_weights=2
+
         if len(balance_weights) == len(score):
             return sum([w * self._forward(x, target) for (w, x) in zip(balance_weights, score)])
         elif len(score) == 1:
