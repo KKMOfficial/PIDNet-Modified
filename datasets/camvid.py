@@ -12,16 +12,16 @@ class CamVid(BaseDataset):
     def __init__(self, 
                  root, 
                  list_path, 
-                 num_classes=11,
-                 multi_scale=True, 
-                 flip=True, 
-                 ignore_label=255, 
-                 base_size=960, 
-                 crop_size=(720, 960),
-                 scale_factor=16,
+                 num_classes,
+                 multi_scale, 
+                 flip, 
+                 ignore_label, 
+                 base_size, 
+                 crop_size,
+                 scale_factor=1,
                  mean=[0.485, 0.456, 0.406], 
                  std=[0.229, 0.224, 0.225],
-                 bd_dilate_size=4):
+                 bd_dilate_size=0):
 
         super(CamVid, self).__init__(ignore_label, base_size,
                 crop_size, scale_factor, mean, std)
@@ -40,10 +40,7 @@ class CamVid(BaseDataset):
 
         self.ignore_label = ignore_label
         
-        self.color_list = [[0, 128, 192], [128, 0, 0], [64, 0, 128],
-                             [192, 192, 128], [64, 64, 128], [64, 64, 0],
-                             [128, 64, 128], [0, 0, 192], [192, 128, 128],
-                             [128, 128, 128], [128, 128, 0]]
+        self.color_list = [[0, 128, 192], [128, 0, 0],]
         
         self.class_weights = None
         
@@ -84,13 +81,24 @@ class CamVid(BaseDataset):
         image = np.array(image)
         size = image.shape
 
+        print(f"[DL-LOG] : Image size is {image.shape}")
+
         color_map = Image.open(os.path.join(self.root,'camvid',item["label"])).convert('RGB')
         color_map = np.array(color_map)
+
+        print(f"[DL-LOG] : label item is {item['label']}")
+        print(f"[DL-LOG] : ColorMap unique values {np.unique(color_map)}")
+
+
         label = self.color2label(color_map)
 
         image, label, edge = self.gen_sample(image, label, 
                                 self.multi_scale, self.flip, edge_pad=False,
                                 edge_size=self.bd_dilate_size, city=False)
+
+        print(f"[DL-LOG] : image.shape = {image.shape}")
+        print(f"[DL-LOG] : label.shape = {label.shape}")
+        print(f"[DL-LOG] : edge.shape = {edge.shape}")
 
         return image.copy(), label.copy(), edge.copy(), np.array(size), name
 
