@@ -173,8 +173,10 @@ def main():
     
     for epoch in range(last_epoch, real_end):
 
+        # print(f"[TRAIN-LOG] : epoch : {epoch}")
+
         current_trainloader = trainloader
-        print(f"[LOG] : train loader sampler is {current_trainloader.sampler}")
+        # print(f"[LOG] : train loader sampler is {current_trainloader.sampler}")
         if current_trainloader.sampler is not None and hasattr(current_trainloader.sampler, 'set_epoch'):
             current_trainloader.sampler.set_epoch(epoch)
 
