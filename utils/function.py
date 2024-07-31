@@ -19,7 +19,7 @@ from utils.utils import adjust_learning_rate
 
 
 def train(config, epoch, num_epoch, epoch_iters, base_lr,
-          num_iters, trainloader, optimizer, model, writer_dict):
+          num_iters, trainloader, optimizer, model, writer_dict, debug_summary_writer, test_dataset):
     # Training
     model.train()
 
@@ -39,10 +39,10 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
 
         # print(f"FUNCTION-LOG : Iteration : {i_iter}")
         # print(f"[FUNCTION-LOG] : image = {torch.unique(images)}")
-        print(f"[FUNCTION-LOG] : labels = {torch.unique(labels)}")
-        print(f"[FUNCTION-LOG] : bd_gts = {torch.unique(bd_gts)}")
+        # print(f"[FUNCTION-LOG] : labels = {torch.unique(labels)}")
+        # print(f"[FUNCTION-LOG] : bd_gts = {torch.unique(bd_gts)}")
 
-        print(f"---------------------------------------------")
+        # print(f"---------------------------------------------")
         
 
 
@@ -52,13 +52,21 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
         
         
         
-        losses, _, acc, loss_list = model(images, labels, bd_gts)
+        losses, _, acc, loss_list = model(images, labels, bd_gts, writer=debug_summary_writer, i_iter=i_iter, epoch=epoch)
         loss = losses.mean()
         acc  = acc.mean()
 
         model.zero_grad()
         loss.backward()
         optimizer.step()
+
+        # log the resalts in directory
+        with torch.no_grad():
+            pred = test_dataset.single_scale_inference(
+                  config,
+                  model,
+                  images)
+        print(f"prediction size = {pred.shape}")
 
         # measure elapsed time
         batch_time.update(time.time() - tic)
