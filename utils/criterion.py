@@ -20,6 +20,15 @@ class CrossEntropy(nn.Module):
 
         loss = self.criterion(score, target)
 
+        # print(f"[CRITERION-LOG] : Target Values Are : {target}")
+        # print(f"[CRITERION-LOG] : Score Values Are : {score}")
+
+        # print(f"[CRITERION-LOG] : Target Unique Values Are : {torch.unique(target)}")
+
+        # print(f"[CRITERION-LOG] : score = {score.shape}")
+        # print(f"[CRITERION-LOG] : target = {target.shape}")
+        # print(f"[CRITERION-LOG] : loss = {loss}")
+
         return loss
 
     def forward(self, score, target):
@@ -33,17 +42,12 @@ class CrossEntropy(nn.Module):
         balance_weights = config.LOSS.BALANCE_WEIGHTS
         sb_weights = config.LOSS.SB_WEIGHTS
 
-        # print(f"[LOG-CRITERION] : balance weights : {balance_weights}")
-        # print(f"[LOG-CRITERION] : sb_weights : {sb_weights}")
-        # print(f"[LOG-CRITERION] : target shape : {target.shape}")
-        print(f"[LOG-CRITERION] : score lentth : {len(score)}")
-        print(f"[LOG-CRITERION] : score[0] lentth : {score[0].shape}")
-        print(f"[LOG-CRITERION] : score[1] lentth : {score[1].shape}")
-        # len(score)=4, balance_weights=2
-
         if len(balance_weights) == len(score):
             return sum([w * self._forward(x, target) for (w, x) in zip(balance_weights, score)])
         elif len(score) == 1:
+            # print(f"sb_weights = {sb_weights}")
+            # print(f"score[0] = {score[0].shape}")
+            # print(f"target = {target.shape}")
             return sb_weights * self._forward(score[0], target)
         
         else:

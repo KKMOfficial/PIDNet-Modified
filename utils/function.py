@@ -37,9 +37,13 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
 
         images, labels, bd_gts, _, _ = batch
 
-        print(f"[FC-LOG] : image size = {images.shape}")
-        print(f"[FC-LOG] : labels size = {labels.shape}")
-        print(f"[FC-LOG] : bd_gts size = {bd_gts.shape}")
+        # print(f"FUNCTION-LOG : Iteration : {i_iter}")
+        # print(f"[FUNCTION-LOG] : image = {torch.unique(images)}")
+        print(f"[FUNCTION-LOG] : labels = {torch.unique(labels)}")
+        print(f"[FUNCTION-LOG] : bd_gts = {torch.unique(bd_gts)}")
+
+        print(f"---------------------------------------------")
+        
 
 
         images = images.cuda()
