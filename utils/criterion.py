@@ -45,9 +45,6 @@ class CrossEntropy(nn.Module):
         if len(balance_weights) == len(score):
             return sum([w * self._forward(x, target) for (w, x) in zip(balance_weights, score)])
         elif len(score) == 1:
-            # print(f"sb_weights = {sb_weights}")
-            # print(f"score[0] = {score[0].shape}")
-            # print(f"target = {target.shape}")
             return sb_weights * self._forward(score[0], target)
         
         else:
