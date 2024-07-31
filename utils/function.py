@@ -34,12 +34,20 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
     global_steps = writer_dict['train_global_steps']
 
     for i_iter, batch in enumerate(trainloader, 0):
+
         images, labels, bd_gts, _, _ = batch
+
+        print(f"[FC-LOG] : image size = {images.shape}")
+        print(f"[FC-LOG] : labels size = {labels.shape}")
+        print(f"[FC-LOG] : bd_gts size = {bd_gts.shape}")
+
+
         images = images.cuda()
         labels = labels.long().cuda()
         bd_gts = bd_gts.float().cuda()
         
-
+        
+        
         losses, _, acc, loss_list = model(images, labels, bd_gts)
         loss = losses.mean()
         acc  = acc.mean()
