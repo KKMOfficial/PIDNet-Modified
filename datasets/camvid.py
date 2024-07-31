@@ -5,6 +5,7 @@
 import os
 import numpy as np
 from PIL import Image
+import torch
 
 from .base_dataset import BaseDataset
 
@@ -40,9 +41,10 @@ class CamVid(BaseDataset):
 
         self.ignore_label = ignore_label
         
-        self.color_list = [[0, 128, 192], [128, 0, 0],]
+        self.color_list = [[0, 0, 0], [255, 255, 255],]
         
-        self.class_weights = None
+        # classes must be counted inside the dataset
+        self.class_weights =  None
         
         self.bd_dilate_size = bd_dilate_size
     
@@ -81,24 +83,26 @@ class CamVid(BaseDataset):
         image = np.array(image)
         size = image.shape
 
-        print(f"[DL-LOG] : Image size is {image.shape}")
+        # print(f"[DL-LOG] : Image size is {image.shape}")
 
         color_map = Image.open(os.path.join(self.root,'camvid',item["label"])).convert('RGB')
         color_map = np.array(color_map)
 
-        print(f"[DL-LOG] : label item is {item['label']}")
-        print(f"[DL-LOG] : ColorMap unique values {np.unique(color_map)}")
+        # print(f"[DL-LOG] : label item is {item['label']}")
+        # print(f"[DL-LOG] : ColorMap unique values {np.unique(color_map)}")
 
 
         label = self.color2label(color_map)
+
+        # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
 
         image, label, edge = self.gen_sample(image, label, 
                                 self.multi_scale, self.flip, edge_pad=False,
                                 edge_size=self.bd_dilate_size, city=False)
 
-        print(f"[DL-LOG] : image.shape = {image.shape}")
-        print(f"[DL-LOG] : label.shape = {label.shape}")
-        print(f"[DL-LOG] : edge.shape = {edge.shape}")
+        # print(f"[DL-LOG] : image.shape = {image.shape}")
+        # print(f"[DL-LOG] : label.shape = {label.shape}")
+        # print(f"[DL-LOG] : edge.shape = {edge.shape}")
 
         return image.copy(), label.copy(), edge.copy(), np.array(size), name
 
