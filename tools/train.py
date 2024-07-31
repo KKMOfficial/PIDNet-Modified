@@ -81,8 +81,10 @@ def main():
         print("The gpu numbers do not match!")
         return 0
     
-    imgnet = 'imagenet' in config.MODEL.PRETRAINED
+    imgnet = 'imgnet' in config.MODEL.PRETRAINED
     model = models.pidnet.get_seg_model(config, imgnet_pretrained=imgnet)
+
+
  
     batch_size = config.TRAIN.BATCH_SIZE_PER_GPU * len(gpus)
     # prepare data
@@ -187,7 +189,7 @@ def main():
 
         train(config, epoch, config.TRAIN.END_EPOCH, 
                   epoch_iters, config.TRAIN.LR, num_iters,
-                  trainloader, optimizer, model, writer_dict, debug_summary_writer, test_dataset=test_dataset)
+                  trainloader, optimizer, model, writer_dict, debug_summary_writer)
 
         if flag_rm == 1 or (epoch % 5 == 0 and epoch < real_end - 100) or (epoch >= real_end - 100):
             valid_loss, mean_IoU, IoU_array = validate(config, 
