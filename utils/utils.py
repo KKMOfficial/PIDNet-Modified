@@ -49,11 +49,13 @@ class FullModel(nn.Module):
     # used semantic loss for two different purpose
     # log data here
     # print(f"input shape is {inputs.shape}")
-    print(f"outputs[-2] shape is {outputs[-2].shape}")
+    # print(f"outputs[-2] shape is {outputs[-2].shape}")
     if writer is not None:
         writer.add_images(f"Pre-Enter/images-epoch{epoch}", torchvision.utils.make_grid(inputs)[None,:,:,:], global_step=i_iter)
         writer.add_images(f"Pre-Enter/labels-epoch{epoch}", torchvision.utils.make_grid(labels.reshape((labels.shape[0],1,labels.shape[1],labels.shape[2])))[None,:,:,:], global_step=i_iter)
         writer.add_images(f"Post-Infer/Border-epoch{epoch}", torchvision.utils.make_grid(outputs[-1])[None,:,:,:], global_step=i_iter)
+        writer.add_images(f"Post-Infer/Segment[0.4]-epoch{epoch}", torchvision.utils.make_grid(torch.unsqueeze(outputs[-2][:,0,:,:], 1))[None,:,:,:], global_step=i_iter)
+        writer.add_images(f"Post-Infer/Segment[1.0]-epoch{epoch}", torchvision.utils.make_grid(torch.unsqueeze(outputs[-2][:,1,:,:], 1))[None,:,:,:], global_step=i_iter)
 
     acc  = self.pixel_acc(outputs[-2], labels)
     loss_s = self.sem_loss(outputs[:-1], labels)
@@ -148,7 +150,7 @@ def get_confusion_matrix(label, pred, size, num_class, ignore=-1):
     output = pred.cpu().numpy().transpose(0, 2, 3, 1)
     seg_pred = np.asarray(np.argmax(output, axis=3), dtype=np.uint8)
     seg_gt = np.asarray(
-    label.cpu().numpy()[:, :size[-2], :size[-1]], dtype=np.int)
+    label.cpu().numpy()[:, :size[-2], :size[-1]], dtype=int)
 
     ignore_index = seg_gt != ignore
     seg_gt = seg_gt[ignore_index]

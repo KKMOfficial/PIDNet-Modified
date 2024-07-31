@@ -19,7 +19,7 @@ from utils.utils import adjust_learning_rate
 
 
 def train(config, epoch, num_epoch, epoch_iters, base_lr,
-          num_iters, trainloader, optimizer, model, writer_dict, debug_summary_writer, test_dataset):
+          num_iters, trainloader, optimizer, model, writer_dict, debug_summary_writer):
     # Training
     model.train()
 
@@ -59,14 +59,6 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
         model.zero_grad()
         loss.backward()
         optimizer.step()
-
-        # log the resalts in directory
-        with torch.no_grad():
-            pred = test_dataset.single_scale_inference(
-                  config,
-                  model,
-                  images)
-        print(f"prediction size = {pred.shape}")
 
         # measure elapsed time
         batch_time.update(time.time() - tic)
