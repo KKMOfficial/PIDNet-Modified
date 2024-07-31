@@ -25,6 +25,7 @@ from configs import update_config
 from utils.criterion import CrossEntropy, OhemCrossEntropy, BondaryLoss
 from utils.function import train, validate
 from utils.utils import create_logger, FullModel
+from torch.utils.tensorboard import SummaryWriter as DebugSummaryWriter
 
 
 def parse_args():
@@ -47,6 +48,10 @@ def parse_args():
 
 
 def main():
+    # make a summary writer default folder is ./run
+    debug_summary_writer = DebugSummaryWriter()
+
+
     args = parse_args()
 
     if args.seed > 0:
@@ -182,7 +187,7 @@ def main():
 
         train(config, epoch, config.TRAIN.END_EPOCH, 
                   epoch_iters, config.TRAIN.LR, num_iters,
-                  trainloader, optimizer, model, writer_dict)
+                  trainloader, optimizer, model, writer_dict, debug_summary_writer, test_dataset=test_dataset)
 
         if flag_rm == 1 or (epoch % 5 == 0 and epoch < real_end - 100) or (epoch >= real_end - 100):
             valid_loss, mean_IoU, IoU_array = validate(config, 
