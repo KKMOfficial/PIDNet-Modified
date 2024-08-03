@@ -212,6 +212,8 @@ def main():
         msg = 'Loss: {:.3f}, MeanIU: {: 4.4f}, Best_mIoU: {: 4.4f}'.format(
                     valid_loss, mean_IoU, best_mIoU)
         logging.info(msg)
+        # this message is given by validate
+        # log the result of the validation inside the validation method
         logging.info(IoU_array)
 
 
