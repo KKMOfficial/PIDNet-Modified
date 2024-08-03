@@ -101,7 +101,9 @@ def main():
     start = timeit.default_timer()
     
     
-    if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
+    # if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
+    if True:
+        print(f"[EVAL] : Final Output Directory : {final_output_dir}")
         test(config, 
              test_dataset, 
              testloader, 
