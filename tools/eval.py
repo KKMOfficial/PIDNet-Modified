@@ -35,6 +35,11 @@ def parse_args():
                         help="Modify config options using the command-line",
                         default=None,
                         nargs=argparse.REMAINDER)
+    parser.add_argument('--export',
+                        help='Whether to export wrapped network as torch script',
+                        default=False,
+                        type=bool,
+                        )
 
     args = parser.parse_args()
     update_config(config, args)
@@ -56,7 +61,7 @@ def main():
     cudnn.enabled = config.CUDNN.ENABLED
 
     # build model
-    model = model = models.pidnet.get_seg_model(config, imgnet_pretrained=True)
+    model = models.pidnet.get_seg_model(config, imgnet_pretrained=True)
 
     if config.TEST.MODEL_FILE:
         model_state_file = config.TEST.MODEL_FILE
@@ -100,7 +105,6 @@ def main():
     
     start = timeit.default_timer()
     
-    
     # if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
     if True:
         print(f"[EVAL] : Final Output Directory : {final_output_dir}")
@@ -126,6 +130,33 @@ def main():
     end = timeit.default_timer()
     logger.info('Mins: %d' % int((end-start)/60))
     logger.info('Done')
+
+class PIDNetWrapper(nn.Module):
+    def __init__(self, core_address):
+        super(SimpleModel, self).__init__()
+        model = models.pidnet.get_seg_model(config, imgnet_pretrained=True)
+        pretrained_dict = torch.load(core_address)
+        if 'state_dict' in pretrained_dict:
+            pretrained_dict = pretrained_dict['state_dict']
+        model_dict = model.state_dict()
+        pretrained_dict = {k[6:]: v for k, v in pretrained_dict.items()
+                            if k[6:] in model_dict.keys()}
+        for k, _ in pretrained_dict.items():
+            logger.info(
+                '=> loading {} from pretrained model'.format(k))
+        model_dict.update(pretrained_dict)
+        model.load_state_dict(model_dict)
+
+    def forward(self, x):
+        # Export torch script model
+        # x[0]=image, x[1]=size, x[2]=name
+        pred = model(x[0])[1]
+        pred = F.interpolate(
+            input=pred, size=x[1][0][-2:],
+            mode='bilinear', align_corners=False
+        )
+        return pred.exp()
+
 
 
 if __name__ == '__main__':
