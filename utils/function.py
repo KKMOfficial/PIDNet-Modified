@@ -194,13 +194,16 @@ def test(config, test_dataset, testloader, model,
     model.eval()
     with torch.no_grad():
         for _, batch in enumerate(tqdm(testloader)):
-            image, size, name = batch
+            # image.copy(), label.copy(), edge.copy(), np.array(size), name
+            image, _, _, size, name = batch
             size = size[0]
             pred = test_dataset.single_scale_inference(
                 config,
                 model,
                 image.cuda())
 
+            # print(f"[FUNCTIONS] : {pred.size()}")
+            # print(f"[FUNCTIONS] : {size}")
             if pred.size()[-2] != size[0] or pred.size()[-1] != size[1]:
                 pred = F.interpolate(
                     pred, size[-2:],
