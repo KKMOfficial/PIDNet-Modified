@@ -135,8 +135,11 @@ python models/speed/pidnet_speed.py --a 'pidnet-m' --c 11 --r 720 960
 ````bash
 python tools/custom.py --a 'pidnet-l' --p '../pretrained_models/cityscapes/PIDNet_L_Cityscapes_test.pt' --t '.png'
 ````
+### 5. Overfitted Models
+mIoU: 0.9, Epochs:5, I:(2880,1024), [Link](https://drive.google.com/file/d/11IpgBaoz4DQsPC3DJ3fDv2gts2O2Lqze/view?usp=sharing)
 
-### 5. Model's Parameter Space Definition
+
+### 6. Model's Parameter Space Definition
 Parameter space define as a 2d plain consists model size (S,M,L) and training dimensions (1/4,1/2,1). IoU is reported for each experiment inside the table below.
 |M/I| 1/4 | 1/2 | 1 |
 |:-:|:-:|:-:|:-:|
@@ -144,7 +147,9 @@ Parameter space define as a 2d plain consists model size (S,M,L) and training di
 |         M           |     |     |   |
 |         L           |     |     |   |
 
-
+### 7. CPU Migration
+TensorRT : https://github.com/Darth-Kronos/PIDNet_TensorRT
+LibTorch : Comming soon!
 
 
 
