@@ -24,6 +24,8 @@ from configs import update_config
 from utils.function import testval, test
 from utils.utils import create_logger
 
+from torch.nn import functional as F
+
 def parse_args():
     parser = argparse.ArgumentParser(description='Train segmentation network')
     
@@ -55,6 +57,7 @@ def main():
     logger.info(pprint.pformat(args))
     logger.info(pprint.pformat(config))
 
+
     # cudnn related setting
     cudnn.benchmark = config.CUDNN.BENCHMARK
     cudnn.deterministic = config.CUDNN.DETERMINISTIC
@@ -68,6 +71,8 @@ def main():
     else:
         model_state_file = os.path.join(final_output_dir, 'best.pt')      
    
+    print(f"[EVAL] : model_state_file={model_state_file}")
+
     logger.info('=> loading model from {}'.format(model_state_file))
         
     pretrained_dict = torch.load(model_state_file)
@@ -104,7 +109,22 @@ def main():
         pin_memory=True)
     
     start = timeit.default_timer()
-    
+
+
+
+    # model torch script export
+    # if args.export:
+    #   model   = PIDNetWrapper(core_address=config.TEST.MODEL_FILE)
+    #   example, _, _, _, _ = next(iter(testloader))
+    #   model.eval()
+    #   traced_script_module = torch.jit.trace(model, example)
+
+    #   # output = traced_script_module(torch.ones(1, 3, 224, 224))
+    #   # print(f"[EVAL] : Output is = {output}")
+
+    #   traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
+    #   return
+
     # if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
     if True:
         print(f"[EVAL] : Final Output Directory : {final_output_dir}")
@@ -133,26 +153,21 @@ def main():
 
 class PIDNetWrapper(nn.Module):
     def __init__(self, core_address):
-        super(SimpleModel, self).__init__()
-        model = models.pidnet.get_seg_model(config, imgnet_pretrained=True)
+        super(PIDNetWrapper, self).__init__()
+        self.core = models.pidnet.get_seg_model(config, imgnet_pretrained=True)
         pretrained_dict = torch.load(core_address)
         if 'state_dict' in pretrained_dict:
             pretrained_dict = pretrained_dict['state_dict']
-        model_dict = model.state_dict()
+        model_dict = self.core.state_dict()
         pretrained_dict = {k[6:]: v for k, v in pretrained_dict.items()
                             if k[6:] in model_dict.keys()}
-        for k, _ in pretrained_dict.items():
-            logger.info(
-                '=> loading {} from pretrained model'.format(k))
         model_dict.update(pretrained_dict)
-        model.load_state_dict(model_dict)
+        self.core.load_state_dict(model_dict)
 
     def forward(self, x):
-        # Export torch script model
-        # x[0]=image, x[1]=size, x[2]=name
-        pred = model(x[0])[1]
+        pred = self.core(x)[1]
         pred = F.interpolate(
-            input=pred, size=x[1][0][-2:],
+            input=pred, size=x.shape[-2:],
             mode='bilinear', align_corners=False
         )
         return pred.exp()
@@ -161,3 +176,4 @@ class PIDNetWrapper(nn.Module):
 
 if __name__ == '__main__':
     main()
+
