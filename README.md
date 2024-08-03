@@ -151,10 +151,12 @@ Parameter space define as a 2d plain consists model size (S,M,L) and training di
 |         M           |     |     |   |
 |         L           |     |     |   |
 
-### 7. CPU Migration
-TensorRT : [Github](https://github.com/Darth-Kronos/PIDNet_TensorRT), [Mine: Comming soon!]()
+### 7. GPU Migration
+TensorRT : [Github](https://github.com/Darth-Kronos/PIDNet_TensorRT)
 
-LibTorch : [Mine: Comming soon!]()
+
+### 8. C++ Migration
+LibTorch : [Comming soon!]()
 
 
 
