@@ -5,6 +5,8 @@
 import logging
 import os
 import time
+import cv2
+from PIL import Image
 
 import numpy as np
 from tqdm import tqdm
@@ -189,13 +191,24 @@ def testval(config, test_dataset, testloader, model,
     return mean_IoU, IoU_array, pixel_acc, mean_acc
 
 
+def mask_overlay(image, mask):
+  mask_rgb = np.array(Image.fromarray(mask, mode='L'))
+  mask_rgba = np.zeros((mask_rgb.shape[0], mask_rgb.shape[1], 4))
+  mask_rgba[:,:,2] = mask_rgb
+  mask_rgba[:,:,3] = 150
+
+  result = cv2.addWeighted(image, 1, mask_rgba.astype(np.uint8), 0.3, 0)
+  return result
+
+
 def test(config, test_dataset, testloader, model,
-         sv_dir='./', sv_pred=True):
+         sv_dir='./', sv_pred=True, img_dc="/content/PIDNet/data/camvid/images/"):
     model.eval()
     with torch.no_grad():
         for _, batch in enumerate(tqdm(testloader)):
             # image.copy(), label.copy(), edge.copy(), np.array(size), name
             image, _, _, size, name = batch
+
             size = size[0]
             pred = test_dataset.single_scale_inference(
                 config,
@@ -214,4 +227,12 @@ def test(config, test_dataset, testloader, model,
                 sv_path = os.path.join(sv_dir,'test_results')
                 if not os.path.exists(sv_path):
                     os.mkdir(sv_path)
-                test_dataset.save_pred(pred, sv_path, name)
+
+                pred = np.asarray(np.argmax(pred.cpu(), axis=1), dtype=np.uint8)
+                pred = test_dataset.label2color(pred)
+                # print(f"[EVAL] : prediction dimension : {pred.shape}")
+                # print(f"[EVAL] : image dimension : {image.shape}")
+                # test_dataset.save_pred(pred, sv_path, name)
+                save_img = mask_overlay(cv2.cvtColor(cv2.imread(f"{img_dc}{name[0]}.png"), cv2.COLOR_RGB2RGBA),
+                                        pred[0,:,:,0]).astype(np.uint8)
+                cv2.imwrite(os.path.join(sv_path, name[0]+'.jpg'), save_img)
