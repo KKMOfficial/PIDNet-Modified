@@ -140,7 +140,7 @@ python models/speed/pidnet_speed.py --a 'pidnet-m' --c 11 --r 720 960
 python tools/custom.py --a 'pidnet-l' --p '../pretrained_models/cityscapes/PIDNet_L_Cityscapes_test.pt' --t '.png'
 ````
 ### 5. Overfitted Models
-mIoU: 0.9, Epochs:5, I:(2880,1024), [Link](https://drive.google.com/file/d/11IpgBaoz4DQsPC3DJ3fDv2gts2O2Lqze/view?usp=sharing)
+mIoU: 0.9831, Epochs:5, I:(2880,1024), [Link](https://drive.google.com/file/d/11IpgBaoz4DQsPC3DJ3fDv2gts2O2Lqze/view?usp=sharing)
 
 
 ### 6. Model's Parameter Space Definition
@@ -152,9 +152,9 @@ Parameter space define as a 2d plain consists model size (S,M,L) and training di
 |         L           |     |     |   |
 
 ### 7. CPU Migration
-TensorRT : https://github.com/Darth-Kronos/PIDNet_TensorRT
+TensorRT : [Github](https://github.com/Darth-Kronos/PIDNet_TensorRT), [Mine: Comming soon!]()
 
-LibTorch : Comming soon!
+LibTorch : [Mine: Comming soon!]()
 
 
 
