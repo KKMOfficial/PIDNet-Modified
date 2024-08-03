@@ -137,6 +137,21 @@ python models/speed/pidnet_speed.py --a 'pidnet-m' --c 11 --r 720 960
 python tools/custom.py --a 'pidnet-l' --p '../pretrained_models/cityscapes/PIDNet_L_Cityscapes_test.pt' --t '.png'
 ````
 
+### 5. Model's Parameter Space Definition
+Parameter space define as a 2d plain consists model size (S,M,L) and training dimensions (1/4,1/2,1). IoU is reported for each experiment inside the table below.
+|model-size/input-size| 1/4 | 1/2 | 1 |
+|         S           |     |     |   |
+|         M           |     |     |   |
+|         L           |     |     |   |
+
+
+
+
+
+
+
+
+
 ## Citation
 
 If you think this implementation is useful for your work, please cite our paper:
