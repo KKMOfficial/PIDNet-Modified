@@ -195,12 +195,6 @@ def get_seg_model(cfg, imgnet_pretrained):
         model_dict = model.state_dict()
         pretrained_state = {k: v for k, v in pretrained_state.items() if (k in model_dict and v.shape == model_dict[k].shape)}
 
-        # print(f"model keys={model_dict.keys()}")
-        # print(f"pretraind keys={pretrained_state.keys()}")
-        # for k, v in pretrained_state.items():
-        #   print(f" k = {k}")
-        #   print(f" v = {v.shape}")
-        #   print(f" m = {model_dict[k].shape}")
         model_dict.update(pretrained_state)
         msg = 'Loaded {} parameters!'.format(len(pretrained_state))
         logging.info('Attention!!!')
