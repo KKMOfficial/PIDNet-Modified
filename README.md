@@ -144,8 +144,8 @@ mIoU: 0.9831, Epochs:5, I:(2880,1024), [Link](https://drive.google.com/file/d/11
 
 
 ### 6. Model's Parameter Space Definition
-Parameter space define as a 2d plain consists model size (S,M,L) and training dimensions (1/4,1/2,1). IoU is reported for each experiment inside the table below.
-|M/I| 1/4 | 1/2 | 1 |
+Parameter space define as a 2d plain consists model size (S,M,L) and training dimensions (1/4,1/2,1). mIoU is reported for each experiment inside the table below.
+|M/I| 1 | 1/2 | 1/4 |
 |:-:|:-:|:-:|:-:|
 |         S           |     |     |   |
 |         M           |     |     |   |
