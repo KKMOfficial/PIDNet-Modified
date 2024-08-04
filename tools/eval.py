@@ -163,6 +163,7 @@ class PIDNetWrapper(nn.Module):
                             if k[6:] in model_dict.keys()}
         model_dict.update(pretrained_dict)
         self.core.load_state_dict(model_dict)
+        self.color_list = [[0, 0, 0], [255, 255, 255],]
 
     def forward(self, x):
         pred = self.core(x)[1]
@@ -170,7 +171,13 @@ class PIDNetWrapper(nn.Module):
             input=pred, size=x.shape[-2:],
             mode='bilinear', align_corners=False
         )
-        return pred.exp()
+        pred = np.asarray(np.argmax(pred.cpu(), axis=1), dtype=np.uint8).squeeze()
+
+        color_map = np.zeros(pred.shape+(3,))
+        for i, v in enumerate(self.color_list):
+            color_map[pred==i] = self.color_list[i]
+
+        return color_map.exp()
 
 
 
