@@ -25,6 +25,7 @@ from utils.function import testval, test
 from utils.utils import create_logger
 from PIL import Image
 
+
 from torch.nn import functional as F
 
 def parse_args():
@@ -119,46 +120,44 @@ def main():
       example, _, _, _, _ = next(iter(testloader))
       model.eval()
       traced_script_module = torch.jit.trace(model, example)
+      output = traced_script_module(example)
 
-      output = traced_script_module(torch.ones(1, 3, 224, 224))
-
-      img = Image.new('1', output.shape)
-      pixels = img.load()
-      for i in range(img.size[0]):
-         for j in range(img.size[1]):
-             pixels[i, j] = output[i][j]
-      img.show()
-
-
-
+      # post-process
+      output = output.detach().cpu().numpy()
+      color_list = [[0, 0, 0], [255, 255, 255],]
+      color_map = np.zeros((output.shape[0],output.shape[1],3)).astype(np.uint8)
+      for i, v in enumerate(color_list):
+          color_map[output==i] = color_list[i]
+      im = Image.fromarray(color_map.astype(np.uint8))
+      im.save("/content/PIDNet/trace_output.jpg")
 
       traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
       return
 
     if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
-
+      ...
 
 
 
     if True:
-        print(f"[EVAL] : Final Output Directory : {final_output_dir}")
-        test(config, 
-             test_dataset, 
-             testloader, 
-             model,
-             sv_dir=final_output_dir)
+      print(f"[EVAL] : Final Output Directory : {final_output_dir}")
+      test(config, 
+            test_dataset, 
+            testloader, 
+            model,
+            sv_dir=final_output_dir)
         
     else:
-        mean_IoU, IoU_array, pixel_acc, mean_acc = testval(config, 
-                                                           test_dataset, 
-                                                           testloader, 
-                                                           model)
-    
-        msg = 'MeanIU: {: 4.4f}, Pixel_Acc: {: 4.4f}, \
-            Mean_Acc: {: 4.4f}, Class IoU: '.format(mean_IoU, 
-            pixel_acc, mean_acc)
-        logging.info(msg)
-        logging.info(IoU_array)
+      mean_IoU, IoU_array, pixel_acc, mean_acc = testval(config, 
+                                                          test_dataset, 
+                                                          testloader, 
+                                                          model)
+  
+      msg = 'MeanIU: {: 4.4f}, Pixel_Acc: {: 4.4f}, \
+          Mean_Acc: {: 4.4f}, Class IoU: '.format(mean_IoU, 
+          pixel_acc, mean_acc)
+      logging.info(msg)
+      logging.info(IoU_array)
 
 
     end = timeit.default_timer()
@@ -177,31 +176,16 @@ class PIDNetWrapper(nn.Module):
                             if k[6:] in model_dict.keys()}
         model_dict.update(pretrained_dict)
         self.core.load_state_dict(model_dict)
-        self.color_list = [[0, 0, 0], [255, 255, 255],]
 
     def forward(self, x):
         pred = self.core(x)[1]
-
-        print(f"[OUTPUT NUM] : {config.MODEL.NUM_OUTPUTS}")
-        print(f"[OUTPUT INDEX] : {config.TEST.OUTPUT_INDEX}")
-        if config.MODEL.NUM_OUTPUTS > 1:
-              pred = pred[config.TEST.OUTPUT_INDEX]
-
-
         pred = pred.exp()
         pred = F.interpolate(
             input=pred, size=x.shape[-2:],
             mode='bilinear', align_corners=False
         )
-        pred = np.asarray(np.argmax(pred.cpu(), axis=1), dtype=np.uint8).squeeze()
-
-        color_map = np.zeros(pred.shape+(3,))
-        for i, v in enumerate(self.color_list):
-            color_map[pred==i] = self.color_list[i]
-
-        print(f"[OUTPUT SHAPE] : Output shape is = {pred.shape}")
-
-        return color_map
+        pred = torch.argmax(pred, dim=1).to(torch.uint8).squeeze()
+        return pred
 
 
 
