@@ -118,14 +118,24 @@ def main():
     print(f"[EXPORT MODE] : {args.export}")
     if args.export == "torch-script":
       model   = PIDNetWrapper(core_address=config.TEST.MODEL_FILE)
-      # example, _, _, _, _ = next(iter(testloader))
+
+
+      # # automatic generated data
+      # example = None
+      # for i,e in enumerate(testloader):
+      #   if i==20: 
+      #     example=e[0]
+      #     break
+      # channel = (example).detach().cpu().numpy().astype(np.uint8)
+      # im = Image.fromarray(np.transpose(channel[0], (1,2,0)))
+      # im.save("/content/PIDNet/trace_input.jpg")
 
 
       # pre-process
-      image = cv2.imread('/content/PIDNet/data/camvid/images/LUCID_TRI071S-M_221100697__20240303165156266_image0_jpg.rf.badeab44a18c96f898e1f6c873da0cbb.png', 0) 
+      image = cv2.imread('/content/PIDNet/data/camvid/images/LUCID_TRI071S-M_221100697__20240303164837037_image0_jpg.rf.c43dd50b9d5e23c2108bf24cfcda5a7f.png', 0) 
       image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
       print(f"[IMAGE SHAPE] : {image.shape}")
-      image = image.astype(np.float32)[:, :, ::-1]
+      image = image.astype(np.float32)
       image = image / 255.0
       image -= [0.485, 0.456, 0.406]
       image /= [0.229, 0.224, 0.225]
@@ -134,9 +144,7 @@ def main():
       # raise Exception("stopped here!")
       example = torch.tensor(image).permute((2,0,1)).unsqueeze(0)
       
-      # channel = (example*255).detach().cpu().numpy().astype(np.uint8)
-      # im = Image.fromarray(np.transpose(channel[0], (1,2,0)))
-      # im.save("/content/PIDNet/trace_input.jpg")
+      
 
       # process
       model.eval()
@@ -149,6 +157,7 @@ def main():
       color_map = np.zeros((output.shape[0],output.shape[1],3)).astype(np.uint8)
       for i, v in enumerate(color_list):
           color_map[output==i] = color_list[i]
+      print(f"[OUTPTU SHAPE] : {color_map.shape}")
       im = Image.fromarray(color_map.astype(np.uint8))
       im.save("/content/PIDNet/trace_output.jpg")
 
