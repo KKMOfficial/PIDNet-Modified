@@ -23,6 +23,7 @@ from configs import config
 from configs import update_config
 from utils.function import testval, test
 from utils.utils import create_logger
+from PIL import Image
 
 from torch.nn import functional as F
 
@@ -39,8 +40,8 @@ def parse_args():
                         nargs=argparse.REMAINDER)
     parser.add_argument('--export',
                         help='Whether to export wrapped network as torch script',
-                        default=False,
-                        type=bool,
+                        default='none',
+                        type=str,
                         )
 
     args = parser.parse_args()
@@ -111,21 +112,34 @@ def main():
     start = timeit.default_timer()
 
 
-
     # model torch script export
-    # if args.export:
-    #   model   = PIDNetWrapper(core_address=config.TEST.MODEL_FILE)
-    #   example, _, _, _, _ = next(iter(testloader))
-    #   model.eval()
-    #   traced_script_module = torch.jit.trace(model, example)
+    print(f"[EXPORT MODE] : {args.export}")
+    if args.export == "torch-script":
+      model   = PIDNetWrapper(core_address=config.TEST.MODEL_FILE)
+      example, _, _, _, _ = next(iter(testloader))
+      model.eval()
+      traced_script_module = torch.jit.trace(model, example)
 
-    #   # output = traced_script_module(torch.ones(1, 3, 224, 224))
-    #   # print(f"[EVAL] : Output is = {output}")
+      output = traced_script_module(torch.ones(1, 3, 224, 224))
 
-    #   traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
-    #   return
+      img = Image.new('1', output.shape)
+      pixels = img.load()
+      for i in range(img.size[0]):
+         for j in range(img.size[1]):
+             pixels[i, j] = output[i][j]
+      img.show()
 
-    # if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
+
+
+
+      traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
+      return
+
+    if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
+
+
+
+
     if True:
         print(f"[EVAL] : Final Output Directory : {final_output_dir}")
         test(config, 
@@ -167,6 +181,14 @@ class PIDNetWrapper(nn.Module):
 
     def forward(self, x):
         pred = self.core(x)[1]
+
+        print(f"[OUTPUT NUM] : {config.MODEL.NUM_OUTPUTS}")
+        print(f"[OUTPUT INDEX] : {config.TEST.OUTPUT_INDEX}")
+        if config.MODEL.NUM_OUTPUTS > 1:
+              pred = pred[config.TEST.OUTPUT_INDEX]
+
+
+        pred = pred.exp()
         pred = F.interpolate(
             input=pred, size=x.shape[-2:],
             mode='bilinear', align_corners=False
@@ -177,7 +199,9 @@ class PIDNetWrapper(nn.Module):
         for i, v in enumerate(self.color_list):
             color_map[pred==i] = self.color_list[i]
 
-        return color_map.exp()
+        print(f"[OUTPUT SHAPE] : Output shape is = {pred.shape}")
+
+        return color_map
 
 
 
