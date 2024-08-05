@@ -24,6 +24,7 @@ from configs import update_config
 from utils.function import testval, test
 from utils.utils import create_logger
 from PIL import Image
+import cv2
 
 
 from torch.nn import functional as F
@@ -117,7 +118,27 @@ def main():
     print(f"[EXPORT MODE] : {args.export}")
     if args.export == "torch-script":
       model   = PIDNetWrapper(core_address=config.TEST.MODEL_FILE)
-      example, _, _, _, _ = next(iter(testloader))
+      # example, _, _, _, _ = next(iter(testloader))
+
+
+      # pre-process
+      image = cv2.imread('/content/PIDNet/data/camvid/images/LUCID_TRI071S-M_221100697__20240303165156266_image0_jpg.rf.badeab44a18c96f898e1f6c873da0cbb.png', 0) 
+      image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+      print(f"[IMAGE SHAPE] : {image.shape}")
+      image = image.astype(np.float32)[:, :, ::-1]
+      image = image / 255.0
+      image -= [0.485, 0.456, 0.406]
+      image /= [0.229, 0.224, 0.225]
+      im = Image.fromarray(image.astype(np.uint8))
+      im.save("/content/PIDNet/handmade_trace_input.jpg")
+      # raise Exception("stopped here!")
+      example = torch.tensor(image).permute((2,0,1)).unsqueeze(0)
+      
+      # channel = (example*255).detach().cpu().numpy().astype(np.uint8)
+      # im = Image.fromarray(np.transpose(channel[0], (1,2,0)))
+      # im.save("/content/PIDNet/trace_input.jpg")
+
+      # process
       model.eval()
       traced_script_module = torch.jit.trace(model, example)
       output = traced_script_module(example)
@@ -131,7 +152,7 @@ def main():
       im = Image.fromarray(color_map.astype(np.uint8))
       im.save("/content/PIDNet/trace_output.jpg")
 
-      traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
+      # traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
       return
 
     if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
