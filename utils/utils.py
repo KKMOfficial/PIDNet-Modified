@@ -51,12 +51,12 @@ class FullModel(nn.Module):
     # print(f"input shape is {inputs.shape}")
     # print(f"outputs[-2] shape is {outputs[-2].shape}")
     # print(f"outputs[-1] shape is {outputs[-1].shape}")
-    if writer is not None:
-        writer.add_images(f"Pre-Enter/images-epoch{epoch}", torchvision.utils.make_grid(inputs)[None,:,:,:], global_step=i_iter)
-        writer.add_images(f"Pre-Enter/labels-epoch{epoch}", torchvision.utils.make_grid(labels.reshape((labels.shape[0],1,labels.shape[1],labels.shape[2])))[None,:,:,:], global_step=i_iter)
-        writer.add_images(f"Post-Infer/Border-epoch{epoch}", torchvision.utils.make_grid(outputs[-1])[None,:,:,:], global_step=i_iter)
-        writer.add_images(f"Post-Infer/Segment[0.4]-epoch{epoch}", torchvision.utils.make_grid(torch.unsqueeze(outputs[-2][:,0,:,:], 1))[None,:,:,:], global_step=i_iter)
-        writer.add_images(f"Post-Infer/Segment[1.0]-epoch{epoch}", torchvision.utils.make_grid(torch.unsqueeze(outputs[-2][:,1,:,:], 1))[None,:,:,:], global_step=i_iter)
+    if (writer is not None) and (i_iter%10==1):
+        writer.add_images(f"Pre-Enter/images-epoch{epoch}", torchvision.utils.make_grid(inputs)[None,:,:,:], global_step=i_iter//10)
+        writer.add_images(f"Pre-Enter/labels-epoch{epoch}", torchvision.utils.make_grid(labels.reshape((labels.shape[0],1,labels.shape[1],labels.shape[2])))[None,:,:,:], global_step=i_iter//10)
+        writer.add_images(f"Post-Infer/Border-epoch{epoch}", torchvision.utils.make_grid(outputs[-1])[None,:,:,:], global_step=i_iter//10)
+        writer.add_images(f"Post-Infer/Segment[0.4]-epoch{epoch}", torchvision.utils.make_grid(torch.unsqueeze(outputs[-2][:,0,:,:], 1))[None,:,:,:], global_step=i_iter//10)
+        writer.add_images(f"Post-Infer/Segment[1.0]-epoch{epoch}", torchvision.utils.make_grid(torch.unsqueeze(outputs[-2][:,1,:,:], 1))[None,:,:,:], global_step=i_iter//10)
 
     acc  = self.pixel_acc(outputs[-2], labels)
     loss_s = self.sem_loss(outputs[:-1], labels)
