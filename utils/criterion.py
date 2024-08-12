@@ -21,7 +21,7 @@ class CrossEntropy(nn.Module):
         loss = self.criterion(score, target)
 
         # print(f"[CRITERION-LOG] : Target Values Are : {target}")
-        # print(f"[CRITERION-LOG] : Score Values Are : {score}")
+        # print(f"[CRITERION-LOG] : Model output Values Are : {score}")
 
         # print(f"[CRITERION-LOG] : Target Unique Values Are : {torch.unique(target)}")
 
