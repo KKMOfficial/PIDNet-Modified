@@ -112,7 +112,7 @@ class CamVid(BaseDataset):
         # # if mask data are not real class values use this to convert them
         # # comment out this line otherwise
         # label = self.color2label(color_map)
-        label = color_map
+        label = color_map[0]
         
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
