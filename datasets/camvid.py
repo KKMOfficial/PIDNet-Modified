@@ -1,5 +1,7 @@
 # ------------------------------------------------------------------------------
 # Written by Jiacong Xu (jiacong.xu@tamu.edu)
+# Editted by KKM
+# Adjust lines [47, 110, ] before using the script to train the models
 # ------------------------------------------------------------------------------
 
 import os
@@ -107,7 +109,11 @@ class CamVid(BaseDataset):
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(color_map)}")
 
 
-        label = self.color2label(color_map)
+        # # if mask data are not real class values use this to convert them
+        # # comment out this line otherwise
+        # label = self.color2label(color_map)
+        label = color_map
+        
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
 
