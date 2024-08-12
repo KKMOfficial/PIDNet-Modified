@@ -102,7 +102,7 @@ class CamVid(BaseDataset):
 
         # print(f"[DL-LOG] : Image size is {image.shape}")
 
-        color_map = Image.open(os.path.join(self.root,'camvid',item["label"])).convert('RGB')
+        color_map = Image.open(os.path.join(self.root,'camvid',item["label"])).convert('L')
         color_map = np.array(color_map)
 
         # print(f"[DL-LOG] : label item is {item['label']}")
@@ -112,7 +112,9 @@ class CamVid(BaseDataset):
         # # if mask data are not real class values use this to convert them
         # # comment out this line otherwise
         # label = self.color2label(color_map)
-        label = color_map[0]
+        label = color_map
+        # print(f"[CAMVID] : label unique values are {np.unique(label)}")
+        # print(f"[CAMVID] : label shape is  {label.shape}")
         
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
