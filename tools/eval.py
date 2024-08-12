@@ -153,7 +153,24 @@ def main():
 
       # post-process
       output = output.detach().cpu().numpy()
-      color_list = [[0, 0, 0], [255, 255, 255],]
+
+      # multi-class segmentation
+      color_list = [
+        [0, 0, 0],       # 0 : background
+        [0, 255, 206],   # 1 : buttom
+        [255, 255, 0],   # 2 : finish
+        [0, 183, 235],   # 3 : neck
+        [255, 0, 255],   # 4 : shoulder
+        [255, 128, 0],   # 5 : side
+      ]
+
+      # # binary segmentation
+      # color_list = [
+      #   [0, 0, 0],       # 0 : background
+      #   [255, 255, 255], # 1 : bottle
+      # ]
+
+
       color_map = np.zeros((output.shape[0],output.shape[1],3)).astype(np.uint8)
       for i, v in enumerate(color_list):
           color_map[output==i] = color_list[i]
