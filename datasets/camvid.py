@@ -41,7 +41,22 @@ class CamVid(BaseDataset):
 
         self.ignore_label = ignore_label
         
-        self.color_list = [[0, 0, 0], [255, 255, 255],]
+
+        # multi-class segmentation
+        self.color_list = [
+          [0, 0, 0],       # 0 : background
+          [0, 255, 206],   # 1 : buttom
+          [255, 255, 0],   # 2 : finish
+          [0, 183, 235],   # 3 : neck
+          [255, 0, 255],   # 4 : shoulder
+          [255, 128, 0],   # 5 : side
+        ]
+
+        # # binary segmentation
+        # self.color_list = [
+        #   [0, 0, 0],       # 0 : background
+        #   [255, 255, 255], # 1 : bottle
+        # ]
         
         # classes must be counted inside the dataset
         self.class_weights =  None
