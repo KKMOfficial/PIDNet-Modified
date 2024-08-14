@@ -199,7 +199,7 @@ class CamVid(BaseDataset):
         
 
         # transform using albumentations
-        transformed = transform(image=image, mask=label)
+        transformed = self.a_transform(image=image, mask=label)
         image = transformed['image']
         label = transformed['mask']
 
