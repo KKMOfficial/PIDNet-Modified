@@ -194,19 +194,25 @@ def testval(config, test_dataset, testloader, model,
 def mask_overlay(image, mask):
   mask_rgb = np.array(Image.fromarray(mask))
   mask_rgba = np.zeros((mask_rgb.shape[0], mask_rgb.shape[1], 4))
-  mask_rgba[:,:,:3] = mask_rgb
+  mask_rgba[:,:,:3] = mask_rgb[:,:,[2,1,0]]
   mask_rgba[:,:,3] = 150
 
-  result = cv2.addWeighted(image, 1, mask_rgba.astype(np.uint8), 0.3, 0)
+  # print(mask_rgba.shape)
+  # print(mask_rgba[:10,:10,:10])
+  # print(image.shape)
+
+  # result = cv2.addWeighted(image, 1, mask_rgba.astype(np.uint8), 0.3, 0)
+  result = mask_rgba
   return result
 
 
 def test(config, test_dataset, testloader, model,
-         sv_dir='./', sv_pred=True, img_dc="/content/PIDNet/data/camvid/images/"):
+         sv_dir='./', sv_pred=True, img_dc="/content/shoga-sem-segmentation-14030515-3/test/"):
     model.eval()
+    test_dataset.get_transformed_image=True
     with torch.no_grad():
         for _, batch in enumerate(tqdm(testloader)):
-            image, _, _, size, name = batch
+            image, _, _, size, name, input_image = batch
 
             size = size[0]
             pred = test_dataset.single_scale_inference(
@@ -215,20 +221,34 @@ def test(config, test_dataset, testloader, model,
                 image.cuda())
 
             
-            if pred.size()[-2] != size[0] or pred.size()[-1] != size[1]:
-                pred = F.interpolate(
-                    pred, size[-2:],
-                    mode='bilinear', align_corners=config.MODEL.ALIGN_CORNERS
-                )
+            # if pred.size()[-2] != size[0] or pred.size()[-1] != size[1]:
+            #     pred = F.interpolate(
+            #         pred, size[-2:],
+            #         mode='bilinear', align_corners=config.MODEL.ALIGN_CORNERS
+            #     )
                 
             if sv_pred:
                 sv_path = os.path.join(sv_dir,'test_results')
                 if not os.path.exists(sv_path):
                     os.mkdir(sv_path)
 
+                # row,col = 1000,500
+                # print(f"pred 0 : {pred[0,0,row:row+5,col:col+5]}")
+                # print(f"pred 1 : {pred[0,1,row:row+5,col:col+5]}")
+                # print(f"pred 2 : {pred[0,2,row:row+5,col:col+5]}")
+                # print(f"pred 3 : {pred[0,3,row:row+5,col:col+5]}")
+                # print(f"pred 4 : {pred[0,4,row:row+5,col:col+5]}")
+                # print(f"pred 5 : {pred[0,5,row:row+5,col:col+5]}")
+
                 pred = np.asarray(np.argmax(pred.cpu(), axis=1), dtype=np.uint8)
                 pred = test_dataset.label2color(pred)
-                
-                save_img = mask_overlay(cv2.cvtColor(cv2.imread(f"{img_dc}{name[0]}.png"), cv2.COLOR_RGB2RGBA),
+
+
+                load_img = cv2.cvtColor(cv2.imread(f"{img_dc}{name[0]}.png"), cv2.COLOR_RGB2RGBA)
+                load_img[:,:,:3] = input_image[0].detach().numpy().astype(np.uint8)
+
+
+                save_img = mask_overlay(load_img,
                                         pred[0,:,:,:]).astype(np.uint8)
                 cv2.imwrite(os.path.join(sv_path, name[0]+'.jpg'), save_img)
+    test_dataset.get_transformed_image=False
