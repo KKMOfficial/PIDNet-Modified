@@ -8,6 +8,8 @@ import os
 import numpy as np
 from PIL import Image
 import torch
+import albumentations as A
+import cv2
 
 from .base_dataset import BaseDataset
 
@@ -64,6 +66,85 @@ class CamVid(BaseDataset):
         self.class_weights =  None
         
         self.bd_dilate_size = bd_dilate_size
+
+        self.a_transform = A.Compose([
+          A.GridDistortion(
+            num_steps=5,
+            distort_limit=(-0.3, 0.3),
+            interpolation=1,
+            border_mode=4,
+            normalized=True,
+            always_apply=True,
+          ),
+          A.HorizontalFlip(
+            p=0.5,
+          ),
+          A.ISONoise(
+            color_shift=(0.01, 0.3),
+            intensity=(0.2, 0.8),
+            always_apply=True,
+          ),
+          A.ImageCompression(
+            quality_range=(20, 99),
+            always_apply=True
+          ),
+          A.MotionBlur(
+            blur_limit=7,
+            allow_shifted=True,
+            always_apply=True,
+          ),
+          A.Perspective(
+            scale=(0.05, 0.2),
+            keep_size=True,
+            pad_mode=0,
+            fit_output=False,
+            interpolation=1,
+            p=0.5,
+          ),
+          A.RandomBrightnessContrast(
+            brightness_limit=(-0.05, 0.05),
+            contrast_limit=(-0.2, 0.2),
+            brightness_by_max=True,
+            always_apply=True,
+          ),
+          A.RandomSunFlare(
+            flare_roi=(0, 0, 1, 0.05),
+            src_color=(255, 255, 255),
+            angle_range=(0, 0.05),
+            num_flare_circles_range=(1, 4),
+            p=0.05,
+          ),
+          A.RandomSunFlare(
+            flare_roi=(0, 0, 0.05, 1),
+            src_color=(255, 255, 255),
+            angle_range=(0, 0.05),
+            num_flare_circles_range=(1, 4),
+            p=0.05,
+          ),
+          A.RandomSunFlare(
+            flare_roi=(0.95, 0, 1, 1),
+            src_color=(255, 255, 255),
+            angle_range=(0, 0.05),
+            num_flare_circles_range=(1, 4),
+            p=0.05,
+          ),
+          A.SafeRotate(
+            limit=(-15, 15),
+            interpolation=1,
+            border_mode=1,
+            p=0.25,
+          ),
+          A.Spatter(
+            mean=(0.65, 0.65),
+            std=(0.3, 0.3),
+            gauss_sigma=(2, 2),
+            cutout_threshold=(0.68, 0.68),
+            intensity=(0.3, 0.3),
+            mode="mud",
+            p=1.0,
+          ),
+
+        ])
     
     def read_files(self):
         files = []
@@ -116,6 +197,13 @@ class CamVid(BaseDataset):
         # print(f"[CAMVID] : label unique values are {np.unique(label)}")
         # print(f"[CAMVID] : label shape is  {label.shape}")
         
+
+        # transform using albumentations
+        
+
+
+
+
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
 
