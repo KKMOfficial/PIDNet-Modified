@@ -67,6 +67,8 @@ class CamVid(BaseDataset):
         
         self.bd_dilate_size = bd_dilate_size
 
+        self.get_transformed_image = False
+
         self.a_transform = A.Compose([
           A.GridDistortion(
             num_steps=5,
@@ -213,8 +215,10 @@ class CamVid(BaseDataset):
         # print(f"[DL-LOG] : image.shape = {image.shape}")
         # print(f"[DL-LOG] : label.shape = {label.shape}")
         # print(f"[DL-LOG] : edge.shape = {edge.shape}")
-
-        return image.copy(), label.copy(), edge.copy(), np.array(size), name
+        if not self.get_transformed_image:
+          return image.copy(), label.copy(), edge.copy(), np.array(size), name
+        else:
+          return image.copy(), label.copy(), edge.copy(), np.array(size), name, transformed['image'] 
 
     def single_scale_inference(self, config, model, image):
         pred = self.inference(config, model, image)
