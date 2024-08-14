@@ -199,10 +199,9 @@ class CamVid(BaseDataset):
         
 
         # transform using albumentations
-        
-
-
-
+        transformed = transform(image=image, mask=label)
+        image = transformed['image']
+        label = transformed['mask']
 
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
