@@ -58,8 +58,7 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
         bd_gts = bd_gts.float().cuda()
         
         
-        
-        losses, _, acc, loss_list = model(images, labels, bd_gts, writer=debug_summary_writer, i_iter=i_iter, epoch=epoch, transformed_images=transformed_images,transformed_labels=transformed_labels)
+        losses, _, acc, loss_list = model(images, labels, bd_gts, writer=debug_summary_writer, i_iter=i_iter, epoch=epoch, transformed_images=transformed_images,transformed_labels=transformed_labels, label2color=train_dataset.label2color)
         loss = losses.mean()
         acc  = acc.mean()
 
