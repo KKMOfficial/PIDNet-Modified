@@ -203,12 +203,17 @@ def mask_overlay(image, mask):
   mask_rgba[:,:,:3] = mask_rgb[:,:,[2,1,0]]
   mask_rgba[:,:,3] = 150
 
+  if len(image.shape) == 3:
+      image_rgba = np.zeros((image.shape[0],image.shape[1],4))
+      image_rgba[:,:,3]=255
+
+
   # print(mask_rgba.shape)
   # print(mask_rgba[:10,:10,:10])
   # print(image.shape)
 
-  # result = cv2.addWeighted(image, 1, mask_rgba.astype(np.uint8), 0.3, 0)
-  result = mask_rgba
+  result = cv2.addWeighted(image, 1, mask_rgba.astype(np.uint8), 0.3, 0)
+  # result = mask_rgba
   return result
 
 
