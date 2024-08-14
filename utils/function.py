@@ -192,9 +192,9 @@ def testval(config, test_dataset, testloader, model,
 
 
 def mask_overlay(image, mask):
-  mask_rgb = np.array(Image.fromarray(mask, mode='L'))
+  mask_rgb = np.array(Image.fromarray(mask))
   mask_rgba = np.zeros((mask_rgb.shape[0], mask_rgb.shape[1], 4))
-  mask_rgba[:,:,2] = mask_rgb
+  mask_rgba[:,:,:3] = mask_rgb
   mask_rgba[:,:,3] = 150
 
   result = cv2.addWeighted(image, 1, mask_rgba.astype(np.uint8), 0.3, 0)
@@ -230,5 +230,5 @@ def test(config, test_dataset, testloader, model,
                 pred = test_dataset.label2color(pred)
                 
                 save_img = mask_overlay(cv2.cvtColor(cv2.imread(f"{img_dc}{name[0]}.png"), cv2.COLOR_RGB2RGBA),
-                                        pred[0,:,:,0]).astype(np.uint8)
+                                        pred[0,:,:,:]).astype(np.uint8)
                 cv2.imwrite(os.path.join(sv_path, name[0]+'.jpg'), save_img)
