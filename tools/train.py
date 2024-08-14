@@ -50,6 +50,7 @@ def parse_args():
 def main():
     # make a summary writer default folder is ./run
     debug_summary_writer = DebugSummaryWriter()
+    drive_check_points = "/content/drive/MyDrive/logs"
 
 
     args = parse_args()
@@ -191,9 +192,11 @@ def main():
                   epoch_iters, config.TRAIN.LR, num_iters,
                   trainloader, optimizer, model, writer_dict, debug_summary_writer, train_dataset=train_dataset)
 
-        if flag_rm == 1 or (epoch % 5 == 0 and epoch < real_end - 100) or (epoch >= real_end - 100):
+        if flag_rm == 1 or (epoch % 1 == 0 and epoch < real_end - 100) or (epoch >= real_end - 100):
+            train_dataset.perform_transformation = False
             valid_loss, mean_IoU, IoU_array = validate(config, 
                         testloader, model, writer_dict)
+            train_dataset.perform_transformation = True
         if flag_rm == 1:
             flag_rm = 0
 
@@ -209,6 +212,9 @@ def main():
             best_mIoU = mean_IoU
             torch.save(model.module.state_dict(),
                     os.path.join(final_output_dir, 'best.pt'))
+        
+        torch.save(model.module.state_dict(),
+                    os.path.join(drive_check_points, f'check_point_{epoch+1}.pt'))
         msg = 'Loss: {:.3f}, MeanIU: {: 4.4f}, Best_mIoU: {: 4.4f}'.format(
                     valid_loss, mean_IoU, best_mIoU)
         logging.info(msg)
