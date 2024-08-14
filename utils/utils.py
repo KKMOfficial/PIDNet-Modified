@@ -10,6 +10,8 @@ import os
 import logging
 import time
 from pathlib import Path
+from PIL import Image
+import cv2
 
 import numpy as np
 
@@ -18,6 +20,24 @@ import torch.nn as nn
 import torch.nn.functional as F
 from configs import config
 import torchvision
+
+
+def mask_overlay(image, mask):
+  mask_rgb = np.array(Image.fromarray(mask))
+  mask_rgba = np.zeros((mask_rgb.shape[0], mask_rgb.shape[1], 4))
+  mask_rgba[:,:,:3] = mask_rgb[:,:,[2,1,0]]
+  mask_rgba[:,:,3] = 150
+
+  if len(image.shape) == 3:
+      image_rgba = np.array(Image.fromarray(image).convert("RGBA"))
+  else: image_rgba = image
+
+
+  result = cv2.addWeighted(image_rgba.astype(np.uint8), 1, mask_rgba.astype(np.uint8), 0.3, 0)
+  
+  return result
+
+
 
 class FullModel(nn.Module):
 
@@ -58,16 +78,29 @@ class FullModel(nn.Module):
     # print(f"[UTILS] : output argmaxed = {np.argmax(outputs[-2].detach().cpu().numpy(), axis=1).shape}")
     # print(f"[UTILS] : output unique values = {np.unique(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))}")
 
-    if not label2color is None:
-        transformed_outputs = torch.tensor(label2color(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1)))
 
     # print(f"[UTILS] : transformed output shape is {transformed_outputs.shape}")
 
     if (writer is not None) and (i_iter%20==1):
-        if not transformed_images is None : writer.add_images(f"Pre-Infer/images-epoch{epoch}", torchvision.utils.make_grid(transformed_images.permute((0,3,1,2)))[None,:,:,:], global_step=i_iter//10)
+        grid_image = torchvision.utils.make_grid(transformed_images.permute((0,3,1,2)))[None,:,:,:]
+        if not label2color is None:
+            transformed_outputs = torch.tensor(label2color(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))).permute((0,3,1,2))
+            # print(f"[UTILS] : transformed_outputs before gridify shape = {transformed_outputs.shape}")
+            grid_transformed_output = torchvision.utils.make_grid(transformed_outputs)
+            # print(f"[UTILS] : transformed_outputs after gridify shape = {grid_transformed_output.shape}")
+            # print(f"[UTILS] : transformed_outputs after gridify shape = {grid_transformed_output.shape}")
+            # print(f"[UTILS] : grid transformed output shape : {grid_transformed_output.detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8).shape}")
+            # print(f"[UTILS] : grid_image shape : {grid_image[0].detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8).shape}")
+
+            grid_overlay = mask_overlay(
+              grid_image[0].detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8),
+              grid_transformed_output.detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8)
+            )
+        if not transformed_images is None : writer.add_images(f"Pre-Infer/images-epoch{epoch}", grid_image, global_step=i_iter//10)
         if not transformed_labels is None : writer.add_images(f"Pre-Infer/images-epoch{epoch}", torchvision.utils.make_grid(torch.tensor(transformed_labels).permute((0,3,1,2)))[None,:,:,:], global_step=i_iter//10)
         writer.add_images(f"Post-Infer/Border-epoch{epoch}", torchvision.utils.make_grid(outputs[-1])[None,:,:,:], global_step=i_iter//10)
-        writer.add_images(f"Post-Infer/Segment-epoch{epoch}", torchvision.utils.make_grid(transformed_outputs.permute((0,3,1,2)))[None,:,:,:], global_step=i_iter//10)
+        writer.add_images(f"Post-Infer/Segment-epoch{epoch}", grid_transformed_output[None,:,:,:], global_step=i_iter//10)
+        cv2.imwrite(f"/content/PIDNet/output/camvid/test/output_{i_iter}.jpg", grid_overlay)
         
 
     acc  = self.pixel_acc(outputs[-2], labels)
