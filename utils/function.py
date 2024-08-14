@@ -21,7 +21,7 @@ from utils.utils import adjust_learning_rate
 
 
 def train(config, epoch, num_epoch, epoch_iters, base_lr,
-          num_iters, trainloader, optimizer, model, writer_dict, debug_summary_writer):
+          num_iters, trainloader, optimizer, model, writer_dict, debug_summary_writer, train_dataset=None):
     # Training
     model.train()
 
@@ -35,9 +35,14 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
     writer = writer_dict['writer']
     global_steps = writer_dict['train_global_steps']
 
+    if not train_dataset is None:
+      train_dataset.get_transformed_image = True
+
+
     for i_iter, batch in enumerate(trainloader, 0):
 
-        images, labels, bd_gts, _, _ = batch
+        images, labels, bd_gts, _, _, transformed_images = batch
+        transformed_labels = train_dataset.label2color(labels)
 
         # print(f"FUNCTION-LOG : Iteration : {i_iter}")
         # print(f"[FUNCTION-LOG] : image = {torch.unique(images)}")
@@ -54,7 +59,7 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
         
         
         
-        losses, _, acc, loss_list = model(images, labels, bd_gts, writer=debug_summary_writer, i_iter=i_iter, epoch=epoch)
+        losses, _, acc, loss_list = model(images, labels, bd_gts, writer=debug_summary_writer, i_iter=i_iter, epoch=epoch, transformed_images=transformed_images,transformed_labels=transformed_labels)
         loss = losses.mean()
         acc  = acc.mean()
 
@@ -87,6 +92,8 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
 
     writer.add_scalar('train_loss', ave_loss.average(), global_steps)
     writer_dict['train_global_steps'] = global_steps + 1
+    if not train_dataset is None:
+      train_dataset.get_transformed_image = False
 
 def validate(config, testloader, model, writer_dict):
     model.eval()
