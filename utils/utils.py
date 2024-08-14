@@ -12,6 +12,7 @@ import time
 from pathlib import Path
 from PIL import Image
 import cv2
+import random
 
 import numpy as np
 
@@ -77,20 +78,13 @@ class FullModel(nn.Module):
     # print(f"[UTILS] : outputs[-1] shape is {outputs[-1].shape}")
     # print(f"[UTILS] : output argmaxed = {np.argmax(outputs[-2].detach().cpu().numpy(), axis=1).shape}")
     # print(f"[UTILS] : output unique values = {np.unique(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))}")
-
-
     # print(f"[UTILS] : transformed output shape is {transformed_outputs.shape}")
 
     if (writer is not None) and (i_iter%20==1):
         grid_image = torchvision.utils.make_grid(transformed_images.permute((0,3,1,2)))[None,:,:,:]
         if not label2color is None:
             transformed_outputs = torch.tensor(label2color(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))).permute((0,3,1,2))
-            # print(f"[UTILS] : transformed_outputs before gridify shape = {transformed_outputs.shape}")
             grid_transformed_output = torchvision.utils.make_grid(transformed_outputs)
-            # print(f"[UTILS] : transformed_outputs after gridify shape = {grid_transformed_output.shape}")
-            # print(f"[UTILS] : transformed_outputs after gridify shape = {grid_transformed_output.shape}")
-            # print(f"[UTILS] : grid transformed output shape : {grid_transformed_output.detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8).shape}")
-            # print(f"[UTILS] : grid_image shape : {grid_image[0].detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8).shape}")
 
             grid_overlay = mask_overlay(
               grid_image[0].detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8),
@@ -100,7 +94,7 @@ class FullModel(nn.Module):
         if not transformed_labels is None : writer.add_images(f"Pre-Infer/images-epoch{epoch}", torchvision.utils.make_grid(torch.tensor(transformed_labels).permute((0,3,1,2)))[None,:,:,:], global_step=i_iter//10)
         writer.add_images(f"Post-Infer/Border-epoch{epoch}", torchvision.utils.make_grid(outputs[-1])[None,:,:,:], global_step=i_iter//10)
         writer.add_images(f"Post-Infer/Segment-epoch{epoch}", grid_transformed_output[None,:,:,:], global_step=i_iter//10)
-        cv2.imwrite(f"/content/PIDNet/output/camvid/test/output_{i_iter}.jpg", grid_overlay)
+        cv2.imwrite(f"/content/PIDNet/output/camvid/test/output_{epoch}_{i_iter}.jpg", grid_overlay)
         
 
     acc  = self.pixel_acc(outputs[-2], labels)
