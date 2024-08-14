@@ -68,6 +68,7 @@ class CamVid(BaseDataset):
         self.bd_dilate_size = bd_dilate_size
 
         self.get_transformed_image = False
+        self.perform_transformation = True
 
         self.a_transform = A.Compose([
           A.GridDistortion(
@@ -201,9 +202,10 @@ class CamVid(BaseDataset):
         
 
         # transform using albumentations
-        transformed = self.a_transform(image=image, mask=label)
-        image = transformed['image']
-        label = transformed['mask']
+        if self.perform_transformation:
+          transformed = self.a_transform(image=image, mask=label)
+          image = transformed['image']
+          label = transformed['mask']
 
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
