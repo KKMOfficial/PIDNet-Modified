@@ -132,7 +132,7 @@ def main():
 
 
       # pre-process
-      image = cv2.imread('/content/PIDNet/data/camvid/images/LUCID_TRI071S-M_221100697__20240303164837037_image0_jpg.rf.c43dd50b9d5e23c2108bf24cfcda5a7f.png', 0) 
+      image = cv2.imread('/content/shoga-sem-segmentation-14030515-4/train/02PFK-LUCID_TRI071S-M_221100697__20240303170004096_image0_jpg.rf.4790abc021f81ff62ecb0ddc37c78d2a.jpg', 0) 
       image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
       print(f"[IMAGE SHAPE] : {image.shape}")
       image = image.astype(np.float32)
@@ -178,7 +178,7 @@ def main():
       im = Image.fromarray(color_map.astype(np.uint8))
       im.save("/content/PIDNet/trace_output.jpg")
 
-      # traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
+      traced_script_module.save("/content/PIDNet/traced_pidnet_module.pt")
       return
 
     if ('test' in config.DATASET.TEST_SET) and ('city' in config.DATASET.DATASET):
