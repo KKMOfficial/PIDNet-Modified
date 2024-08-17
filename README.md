@@ -157,10 +157,8 @@ TensorRT : [Github](https://github.com/Darth-Kronos/PIDNet_TensorRT)
 
 
 ### 8. C++ Migration
-LibTorch : [Comming soon!]()
-
-
-
+- `LibTorch` : [Comming soon!]()
+- `TensorRT` : [Comming soon!]()
 
 
 
