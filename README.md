@@ -140,7 +140,7 @@ python models/speed/pidnet_speed.py --a 'pidnet-m' --c 11 --r 720 960
 python tools/custom.py --a 'pidnet-l' --p '../pretrained_models/cityscapes/PIDNet_L_Cityscapes_test.pt' --t '.png'
 ````
 ### 5. Overfitted Models
-mIoU: 0.9831, Epochs:5, I:(2880,1024), [Link](https://drive.google.com/file/d/11IpgBaoz4DQsPC3DJ3fDv2gts2O2Lqze/view?usp=sharing)
+- `2-class scenario` mIoU: 0.9831, Epochs:5, I:(2880,1024), [Link](https://drive.google.com/file/d/11IpgBaoz4DQsPC3DJ3fDv2gts2O2Lqze/view?usp=sharing)
 
 
 ### 6. Model's Parameter Space Definition
