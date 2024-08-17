@@ -76,6 +76,7 @@ This implementation is based on [HRNet-Semantic-Segmentation](https://github.com
 ## Usage
 ### -1. Notebook
 [2 class] : Required definitions and codes are placed [Here!](https://drive.google.com/file/d/1kwVdaWhvTtqJYEQL9qO18wCZgVhbMdb2/view?usp=sharing)
+
 [Multi-class] : Updated Notebook to handle multiple classes [Here!]()
 
 ### 0. Prepare the dataset
