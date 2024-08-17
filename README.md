@@ -146,7 +146,7 @@ python tools/custom.py --a 'pidnet-l' --p '../pretrained_models/cityscapes/PIDNe
 
 ### 6. Model's Parameter Space Definition
 Parameter space define as a 2d plain consists model size (S,M,L) and training dimensions (1/4,1/2,1). mIoU is reported for each experiment inside the table below.
-|M/I| 1 | 1/2 | 1/4 |
+|M/I| 1/4 | 1/2 | 1 |
 |:-:|:-:|:-:|:-:|
 |         S           |     |     |   |
 |         M           |     |     |   |
