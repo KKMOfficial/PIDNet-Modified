@@ -214,7 +214,7 @@ def main():
 class PIDNetWrapper(nn.Module):
     def __init__(self, core_address):
         super(PIDNetWrapper, self).__init__()
-        self.core = models.pidnet.get_seg_model(config, imgnet_pretrained=True)
+        self.core = models.pidnet.get_seg_model(config, imgnet_pretrained=False)
         pretrained_dict = torch.load(core_address)
         if 'state_dict' in pretrained_dict:
             pretrained_dict = pretrained_dict['state_dict']
