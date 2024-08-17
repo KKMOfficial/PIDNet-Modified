@@ -87,15 +87,6 @@ class CamVid(BaseDataset):
         #     intensity=(0.2, 0.8),
         #     always_apply=True,
         #   ),
-        #   A.ImageCompression(
-        #     quality_range=(20, 99),
-        #     always_apply=True
-        #   ),
-        #   A.MotionBlur(
-        #     blur_limit=7,
-        #     allow_shifted=True,
-        #     always_apply=True,
-        #   ),
         #   A.Perspective(
         #     scale=(0.05, 0.2),
         #     keep_size=True,
