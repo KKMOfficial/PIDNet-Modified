@@ -148,9 +148,9 @@ python tools/custom.py --a 'pidnet-l' --p '../pretrained_models/cityscapes/PIDNe
 Parameter space define as a 2d plain consists model size (S,M,L) and training dimensions (1/4,1/2,1). mIoU is reported for each experiment inside the table below.
 |M/I| 1/4 | 1/2 | 1 |
 |:-:|:-:|:-:|:-:|
-|         S           |  [57.4](https://drive.usercontent.google.com/download?id=1HT4OZYEpE8MhkmY1XucFT2ocyzkspK5b&export=download&authuser=0&confirm=t&uuid=c8fc65d3-390b-4ef8-a2d8-276fbf4609bc&at=APZUnTW5zE52C55MMBRcW2MuL_0L%3A1723884391606)   |     |   |
+|         S           |     |     |   |
 |         M           |     |     |   |
-|         L           |     |     |   |
+|         L           |     |     | [57.4](https://drive.usercontent.google.com/download?id=1HT4OZYEpE8MhkmY1XucFT2ocyzkspK5b&export=download&authuser=0&confirm=t&uuid=c8fc65d3-390b-4ef8-a2d8-276fbf4609bc&at=APZUnTW5zE52C55MMBRcW2MuL_0L%3A1723884391606) |
 
 ### 7. GPU Migration
 TensorRT : [Github](https://github.com/Darth-Kronos/PIDNet_TensorRT)
