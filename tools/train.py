@@ -195,7 +195,8 @@ def main():
         if flag_rm == 1 or (epoch % 1 == 0 and epoch < real_end - 100) or (epoch >= real_end - 100):
             train_dataset.perform_transformation = False
             valid_loss, mean_IoU, IoU_array = validate(config, 
-                        testloader, model, writer_dict)
+                        testloader, model, writer_dict,
+                        epoch, debug_summary_writer, test_dataset=test_dataset)
             train_dataset.perform_transformation = True
         if flag_rm == 1:
             flag_rm = 0
