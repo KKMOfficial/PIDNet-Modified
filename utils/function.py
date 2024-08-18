@@ -94,21 +94,30 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
     if not train_dataset is None:
       train_dataset.get_transformed_image = False
 
-def validate(config, testloader, model, writer_dict):
+def validate(config, testloader, model, writer_dict
+            ,epoch,debug_summary_writer, test_dataset=None):
     model.eval()
     ave_loss = AverageMeter()
     nums = config.MODEL.NUM_OUTPUTS
     confusion_matrix = np.zeros(
         (config.DATASET.NUM_CLASSES, config.DATASET.NUM_CLASSES, nums))
+    test_dataset.get_transformed_image = True
     with torch.no_grad():
         for idx, batch in enumerate(testloader):
-            image, label, bd_gts, _, _ = batch
+            image, label, bd_gts, _, _, transformed_images = batch
             size = label.size()
             image = image.cuda()
             label = label.long().cuda()
             bd_gts = bd_gts.float().cuda()
-
-            losses, pred, _, _ = model(image, label, bd_gts)
+            losses, pred, _, _ = model(image, label, bd_gts,
+                                      writer=debug_summary_writer,
+                                      i_iter=idx,
+                                      epoch=epoch,
+                                      transformed_images=transformed_images,
+                                      transformed_labels=None,
+                                      label2color=test_dataset.label2color,
+                                      output_tag="__VAL__"
+                                      )
             if not isinstance(pred, (list, tuple)):
                 pred = [pred]
             for i, x in enumerate(pred):
@@ -131,6 +140,7 @@ def validate(config, testloader, model, writer_dict):
             loss = losses.mean()
             ave_loss.update(loss.item())
 
+    test_dataset.get_transformed_image = False
     for i in range(nums):
         pos = confusion_matrix[..., i].sum(1)
         res = confusion_matrix[..., i].sum(0)
