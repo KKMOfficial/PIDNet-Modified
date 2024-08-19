@@ -135,15 +135,15 @@ class CamVid(BaseDataset):
             rotate_method="largest_box",
             p=1.0, 
           ),
-          A.Spatter(
-            mean=(0.65, 0.65),
-            std=(0.3, 0.3),
-            gauss_sigma=(2, 2),
-            cutout_threshold=(0.68, 0.68),
-            intensity=(0.3, 0.3),
-            mode="mud",
-            p=1.0,
-          ),
+          # A.Spatter(
+          #   mean=(0.65, 0.65),
+          #   std=(0.3, 0.3),
+          #   gauss_sigma=(2, 2),
+          #   cutout_threshold=(0.68, 0.68),
+          #   intensity=(0.3, 0.3),
+          #   mode="mud",
+          #   p=1.0,
+          # ),
         ])
         self.null_transform = A.Compose([])
     
