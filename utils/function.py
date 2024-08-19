@@ -105,7 +105,7 @@ def validate(config, testloader, model, writer_dict
     with torch.no_grad():
         for idx, batch in enumerate(testloader):
             image, label, bd_gts, _, _, transformed_images = batch
-            transformed_labels = test_dataset.label2color(labels)
+            transformed_labels = test_dataset.label2color(label)
             size = label.size()
             image = image.cuda()
             label = label.long().cuda()
