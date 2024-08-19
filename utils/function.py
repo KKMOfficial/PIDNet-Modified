@@ -229,7 +229,7 @@ def mask_overlay(image, mask):
 
 
 def test(config, test_dataset, testloader, model,
-         sv_dir='./', sv_pred=True, img_dc="/content/shoga-sem-segmentation-14030515-4/test/"):
+         sv_dir='./', sv_pred=True, img_dc="/content/shoga-sem-segmentation-14030515-6/test/"):
     model.eval()
     test_dataset.get_transformed_image=True
     with torch.no_grad():
