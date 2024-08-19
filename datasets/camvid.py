@@ -91,7 +91,7 @@ class CamVid(BaseDataset):
           ),
           A.Perspective(
             scale=(0.1, 0.2),
-            keep_size=False,
+            keep_size=True,
             pad_mode=cv2.BORDER_CONSTANT,
             pad_val=0,
             mask_pad_val=0,
