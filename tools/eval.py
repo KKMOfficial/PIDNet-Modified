@@ -132,7 +132,7 @@ def main():
 
 
       # pre-process
-      image = cv2.imread('/content/shoga-sem-segmentation-14030515-4/train/02PFK-LUCID_TRI071S-M_221100697__20240303170004096_image0_jpg.rf.4790abc021f81ff62ecb0ddc37c78d2a.jpg', 0) 
+      image = cv2.imread('/content/shoga-sem-segmentation-14030515-6/train/02PFK-LUCID_TRI071S-M_221100697__20240303170004096_image0_jpg.rf.4790abc021f81ff62ecb0ddc37c78d2a.jpg', 0) 
       image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
       print(f"[IMAGE SHAPE] : {image.shape}")
       image = image.astype(np.float32)
