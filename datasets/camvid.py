@@ -131,7 +131,7 @@ class CamVid(BaseDataset):
           A.BBoxSafeRandomCrop(
             erosion_rate=0.0,
             always_apply=True,
-          )
+          ),
           A.Spatter(
             mean=(0.65, 0.65),
             std=(0.3, 0.3),
