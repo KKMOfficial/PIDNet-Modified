@@ -128,9 +128,12 @@ class CamVid(BaseDataset):
             border_mode=1,
             p=0.25,
           ),
-          A.BBoxSafeRandomCrop(
-            erosion_rate=0.0,
-            always_apply=True,
+          A.RandomCropFromBorders(
+            crop_left=0.05,
+            crop_right=0.05,
+            crop_top=0.1,
+            crop_bottom=0.2,
+            p=1.0,
           ),
           A.Spatter(
             mean=(0.65, 0.65),
