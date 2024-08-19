@@ -80,7 +80,7 @@ class FullModel(nn.Module):
     # print(f"[UTILS] : output unique values = {np.unique(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))}")
     # print(f"[UTILS] : transformed output shape is {transformed_outputs.shape}")
 
-    if (writer is not None) and ((i_iter%20==1)or(output_tag=="__VAL__")):
+    if (writer is not None) and ((i_iter%10==1)or(output_tag=="__VAL__")):
         grid_image = torchvision.utils.make_grid(transformed_images.permute((0,3,1,2)))[None,:,:,:]
         if not label2color is None:
             transformed_outputs = torch.tensor(label2color(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))).permute((0,3,1,2))
@@ -91,7 +91,7 @@ class FullModel(nn.Module):
               grid_transformed_output.detach().cpu().numpy().transpose((1,2,0)).astype(np.uint8)
             )
         if not transformed_images is None : writer.add_images(f"Pre-Infer/images-epoch{output_tag}{epoch}", grid_image, global_step=i_iter//10)
-        if not transformed_labels is None : writer.add_images(f"Pre-Infer/images-epoch{output_tag}{epoch}", torchvision.utils.make_grid(torch.tensor(transformed_labels).permute((0,3,1,2)))[None,:,:,:], global_step=i_iter//10)
+        if not transformed_labels is None : writer.add_images(f"Pre-Infer/Labels-epoch{output_tag}{epoch}", torchvision.utils.make_grid(torch.tensor(transformed_labels).permute((0,3,1,2)))[None,:,:,:], global_step=i_iter//10)
         writer.add_images(f"Post-Infer/Border-epoch{output_tag}{epoch}", torchvision.utils.make_grid(outputs[-1])[None,:,:,:], global_step=i_iter//10)
         writer.add_images(f"Post-Infer/Segment-epoch{output_tag}{epoch}", grid_transformed_output[None,:,:,:], global_step=i_iter//10)
         cv2.imwrite(f"/content/PIDNet/output/camvid/test/output{output_tag}_{epoch}_{i_iter}.jpg", grid_overlay)
