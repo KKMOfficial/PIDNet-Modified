@@ -145,7 +145,7 @@ class CamVid(BaseDataset):
             p=1.0,
           ),
         ])
-        # self.a_transform = A.Compose([])
+        self.null_transform = A.Compose([])
     
     def read_files(self):
         files = []
@@ -202,8 +202,10 @@ class CamVid(BaseDataset):
         # transform using albumentations
         if self.perform_transformation:
           transformed = self.a_transform(image=image, mask=label)
-          image = transformed['image']
-          label = transformed['mask']
+        else:
+          transformed = self.null_transform(image=image, mask=label)
+        image = transformed['image']
+        label = transformed['mask']
 
 
         # print(f"[DL-LOG] : ColorMap unique values {np.unique(label)}")
