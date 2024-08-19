@@ -80,7 +80,7 @@ class CamVid(BaseDataset):
             always_apply=True,
           ),
           A.Perspective(
-            scale=(0.01, 0.03),
+            scale=(0.05, 0.1),
             keep_size=True,
             pad_mode=cv2.BORDER_CONSTANT,
             pad_val=0,
@@ -117,7 +117,7 @@ class CamVid(BaseDataset):
           #   p=0.05,
           # ),
           A.SafeRotate(
-            limit=(-3, 3),
+            limit=(-5, 5),
             interpolation=1,
             border_mode=cv2.BORDER_CONSTANT,
             value=0,
@@ -131,19 +131,19 @@ class CamVid(BaseDataset):
             value=0,
             mask_value=0,
             shift_limit_x=(-0.4,0.4),
-            shift_limit_y=(-0.2,0.2),
+            shift_limit_y=(-0.4,0.0),
             rotate_method="largest_box",
             p=1.0, 
           ),
-          # A.Spatter(
-          #   mean=(0.65, 0.65),
-          #   std=(0.3, 0.3),
-          #   gauss_sigma=(2, 2),
-          #   cutout_threshold=(0.68, 0.68),
-          #   intensity=(0.3, 0.3),
-          #   mode="mud",
-          #   p=1.0,
-          # ),
+          A.Spatter(
+            mean=(0.65, 0.65),
+            std=(0.3, 0.3),
+            gauss_sigma=(2, 2),
+            cutout_threshold=(0.68, 0.68),
+            intensity=(0.3, 0.3),
+            mode="mud",
+            p=1.0,
+          ),
         ])
         # self.a_transform = A.Compose([])
     
