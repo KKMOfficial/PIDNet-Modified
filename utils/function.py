@@ -102,6 +102,7 @@ def validate(config, testloader, model, writer_dict
     confusion_matrix = np.zeros(
         (config.DATASET.NUM_CLASSES, config.DATASET.NUM_CLASSES, nums))
     test_dataset.get_transformed_image = True
+    test_dataset.perform_transformation = False
     with torch.no_grad():
         for idx, batch in enumerate(testloader):
             image, label, bd_gts, _, _, transformed_images = batch
@@ -142,6 +143,7 @@ def validate(config, testloader, model, writer_dict
             ave_loss.update(loss.item())
 
     test_dataset.get_transformed_image = False
+    test_dataset.perform_transformation = True
     for i in range(nums):
         pos = confusion_matrix[..., i].sum(1)
         res = confusion_matrix[..., i].sum(0)
