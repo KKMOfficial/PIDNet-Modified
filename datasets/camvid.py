@@ -128,12 +128,14 @@ class CamVid(BaseDataset):
             border_mode=1,
             p=0.25,
           ),
-          A.RandomCropFromBorders(
-            crop_left=0.05,
-            crop_right=0.05,
-            crop_top=0.1,
-            crop_bottom=0.2,
-            p=1.0,
+          A.ShiftScaleRotate(
+            rotate_limit=(-20, 20),
+            interpolation=1,  
+            border_mode=4, 
+            shift_limit_x=(-0.2,0.2),
+            shift_limit_y=(-0.1,0.1),
+            rotate_method="largest_box",
+            p=1.0, 
           ),
           A.Spatter(
             mean=(0.65, 0.65),
