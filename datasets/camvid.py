@@ -71,16 +71,6 @@ class CamVid(BaseDataset):
         self.perform_transformation = True
 
         self.a_transform = A.Compose([
-          A.GridDistortion(
-            num_steps=5,
-            distort_limit=(-0.05, 0.05),
-            interpolation=1,
-            border_mode=cv2.BORDER_CONSTANT,
-            value=0,
-            mask_value=0,
-            normalized=True,
-            always_apply=True,
-          ),
           A.HorizontalFlip(
             p=0.5,
           ),
@@ -90,7 +80,7 @@ class CamVid(BaseDataset):
             always_apply=True,
           ),
           A.Perspective(
-            scale=(0.1, 0.2),
+            scale=(0.02, 0.05),
             keep_size=True,
             pad_mode=cv2.BORDER_CONSTANT,
             pad_val=0,
@@ -135,13 +125,13 @@ class CamVid(BaseDataset):
             p=0.25,
           ),
           A.ShiftScaleRotate(
-            rotate_limit=(-2, 2),
+            rotate_limit=(-1, 1),
             interpolation=1,  
             border_mode=cv2.BORDER_CONSTANT,
             value=0,
             mask_value=0,
-            shift_limit_x=(-0.3,0.3),
-            shift_limit_y=(-0.3,0.3),
+            shift_limit_x=(-0.4,0.4),
+            shift_limit_y=(-0.4,0.4),
             rotate_method="largest_box",
             p=1.0, 
           ),
