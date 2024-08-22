@@ -1,7 +1,7 @@
 # ------------------------------------------------------------------------------
 # Written by Jiacong Xu (jiacong.xu@tamu.edu)
 # Editted by KKM
-# Adjust lines [47, 110, ] before using the script to train the models
+# Edit lines [47, 110, ] before using the script to train the models
 # ------------------------------------------------------------------------------
 
 import os
