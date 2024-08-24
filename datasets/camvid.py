@@ -130,8 +130,8 @@ class CamVid(BaseDataset):
             p=1.0, 
           ),
           A.RandomBrightnessContrast(
-            brightness_limit=(0.05, 0.05),
-            contrast_limit=(0.05, 0.05),
+            brightness_limit=(0.09, 0.09),
+            contrast_limit=(0.09, 0.09),
             p=1.0,
           ),
           # A.Spatter(
@@ -146,8 +146,8 @@ class CamVid(BaseDataset):
         ])
         self.null_transform = A.Compose([
           A.RandomBrightnessContrast(
-            brightness_limit=(0.05, 0.05),
-            contrast_limit=(0.05, 0.05),
+            brightness_limit=(0.09, 0.09),
+            contrast_limit=(0.09, 0.09),
             p=1.0,
           ),
         ])
