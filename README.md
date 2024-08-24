@@ -1,40 +1,6 @@
 # PIDNet: A Real-time Semantic Segmentation Network Inspired from PID Controller
-	
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pidnet-a-real-time-semantic-segmentation/real-time-semantic-segmentation-on-camvid)](https://paperswithcode.com/sota/real-time-semantic-segmentation-on-camvid?p=pidnet-a-real-time-semantic-segmentation) [![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pidnet-a-real-time-semantic-segmentation/real-time-semantic-segmentation-on-cityscapes)](https://paperswithcode.com/sota/real-time-semantic-segmentation-on-cityscapes?p=pidnet-a-real-time-semantic-segmentation)
-
-[![PWC](https://img.shields.io/endpoint.svg?url=https://paperswithcode.com/badge/pidnet-a-real-time-semantic-segmentation/real-time-semantic-segmentation-on-cityscapes-1)](https://paperswithcode.com/sota/real-time-semantic-segmentation-on-cityscapes-1?p=pidnet-a-real-time-semantic-segmentation) [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 This is the official repository for our recent work: PIDNet ([PDF](https://arxiv.org/pdf/2206.02066)）
-
-## Highlights
-<p align="center">
-  <img src="figs/cityscapes_score.jpg" alt="overview-of-our-method" width="500"/></br>
-  <span align="center">Comparison of inference speed and accuracy for real-time models on test set of Cityscapes.</span> 
-</p>
-
-* **Towards Real-time Applications**: PIDNet could be directly used for the real-time applications, such as autonomous vehicle and medical imaging.
-* **A Novel Three-branch Network**: Addtional boundary branch is introduced to two-branch network to mimic the PID controller architecture and remedy the overshoot issue of previous models.
-* **More Accurate and Faster**: PIDNet-S presents 78.6% mIOU with speed of 93.2 FPS on Cityscapes test set and 80.1% mIOU with speed of 153.7 FPS on CamVid test set. Also, PIDNet-L becomes the most accurate one (80.6% mIOU) among all the real-time networks for Cityscapes.
-
-## Updates
-   - This paper was accepted by CVPR 2023, new version and associated materials will be available soon! (Apr/06/2023)
-   - Fixed the data bug for Camvid and the new version of arXiv preprint will be available on Jun 13th. (Jun/09/2022)
-   - Our paper was marked as state of the art in [Papers with Code](https://paperswithcode.com/task/real-time-semantic-segmentation). (Jun/06/2022)
-   - Our paper was submitted to arXiv for public access. (Jun/04/2022)
-   - The training and testing codes and trained models for PIDNet are available here. (Jun/03/2022)
-
-## Demos
-
-A demo of the segmentation performance of our proposed PIDNets: Original video (left) and predictions of PIDNet-S (middle) and PIDNet-L (right)
-<p align="center">
-  <img src="figs/video1_all.gif" alt="Cityscapes" width="800"/></br>
-  <span align="center">Cityscapes Stuttgart demo video #1</span>
-</p>
-
-<p align="center">
-  <img src="figs/video2_all.gif" alt="Cityscapes" width="800"/></br>
-  <span align="center">Cityscapes Stuttgart demo video #2</span>
-</p>
 
 ## Overview
 <p align="center">
