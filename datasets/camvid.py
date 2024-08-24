@@ -89,12 +89,6 @@ class CamVid(BaseDataset):
             interpolation=1,
             p=0.5,
           ),
-          A.RandomBrightnessContrast(
-            brightness_limit=(-0.2, 0.05),
-            contrast_limit=(-0.2, 0.2),
-            brightness_by_max=True,
-            always_apply=True,
-          ),
           A.RandomSunFlare(
             flare_roi=(0, 0, 1, 0.05),
             src_color=(255, 255, 255),
@@ -139,34 +133,44 @@ class CamVid(BaseDataset):
             shadow_roi=(0, 0, 0.05, 1),
             num_shadows_limit=(2,2),
             shadow_dimension=5,
-            shadow_intensity_range=(0.85, 0.85),
+            shadow_intensity_range=(0.55, 0.85),
             p=1.0,
           ),
           A.RandomShadow(
             shadow_roi=(0.95, 0, 1, 1),
             num_shadows_limit=(2,2),
             shadow_dimension=5,
-            shadow_intensity_range=(0.85, 0.85),
+            shadow_intensity_range=(0.55, 0.85),
             p=1.0,
           ),
           A.RandomShadow(
             shadow_roi=(0, 0, 1, 0.05),
             num_shadows_limit=(2,2),
             shadow_dimension=5,
-            shadow_intensity_range=(0.85, 0.85),
+            shadow_intensity_range=(0.55, 0.85),
             p=1.0,
           ),
           A.RandomShadow(
             shadow_roi=(0, 0.80, 1, 1),
             num_shadows_limit=(2,2),
             shadow_dimension=5,
-            shadow_intensity_range=(0.85, 0.85),
+            shadow_intensity_range=(0.55, 0.85),
             p=1.0,
           ),
           A.RandomGamma(
             gamma_limit=(100, 400),  # ScaleIntType
             always_apply=None,  # bool | None
             p=1.0,  # float
+          ),
+          A.RandomToneCurve(
+            scale=0.1,  # float
+            per_channel=False,  # bool
+            p=1.0,  # float
+          ),
+          A.RandomBrightnessContrast(
+            brightness_limit=(-0.5, -0.2),
+            contrast_limit=(-0.1, 0.1),
+            p=1.0,
           ),
           # A.Spatter(
           #   mean=(0.65, 0.65),
