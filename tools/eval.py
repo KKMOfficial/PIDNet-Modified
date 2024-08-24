@@ -136,7 +136,8 @@ def main():
       print(f"[IMAGE SHAPE] : {image.shape}")
       # image = image.astype(np.float32)
     
-      image = cv2.convertScaleAbs(image, alpha=1.09, beta=1.09).astype(np.float32)
+      # image = cv2.convertScaleAbs(image, alpha=1.09, beta=1.09).astype(np.float32)
+      image = 1.09*image+22.95;  
 
       image = image / 255.0
       image -= [0.485, 0.456, 0.406]
