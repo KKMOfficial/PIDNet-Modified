@@ -90,8 +90,8 @@ class CamVid(BaseDataset):
             p=0.5,
           ),
           A.RandomBrightnessContrast(
-            brightness_limit=(-0.05, 0.05),
-            contrast_limit=(-0.1, 0.1),
+            brightness_limit=(-0.2, 0.05),
+            contrast_limit=(-0.2, 0.2),
             brightness_by_max=True,
             always_apply=True,
           ),
@@ -99,22 +99,22 @@ class CamVid(BaseDataset):
             flare_roi=(0, 0, 1, 0.05),
             src_color=(255, 255, 255),
             angle_range=(0, 0.05),
-            num_flare_circles_range=(1, 4),
-            p=0.05,
+            num_flare_circles_range=(2, 5),
+            p=0.25,
           ),
           A.RandomSunFlare(
             flare_roi=(0, 0, 0.05, 1),
             src_color=(255, 255, 255),
             angle_range=(0, 0.05),
-            num_flare_circles_range=(1, 4),
-            p=0.05,
+            num_flare_circles_range=(2, 5),
+            p=0.25,
           ),
           A.RandomSunFlare(
             flare_roi=(0.95, 0, 1, 1),
             src_color=(255, 255, 255),
             angle_range=(0, 0.05),
-            num_flare_circles_range=(1, 4),
-            p=0.05,
+            num_flare_circles_range=(2, 5),
+            p=0.25,
           ),
           A.SafeRotate(
             limit=(-5, 5),
@@ -134,6 +134,39 @@ class CamVid(BaseDataset):
             shift_limit_y=(-0.4,0.0),
             rotate_method="largest_box",
             p=1.0, 
+          ),
+          A.RandomShadow(
+            shadow_roi=(0, 0, 0.05, 1),
+            num_shadows_limit=(2,2),
+            shadow_dimension=5,
+            shadow_intensity_range=(0.85, 0.85),
+            p=1.0,
+          ),
+          A.RandomShadow(
+            shadow_roi=(0.95, 0, 1, 1),
+            num_shadows_limit=(2,2),
+            shadow_dimension=5,
+            shadow_intensity_range=(0.85, 0.85),
+            p=1.0,
+          ),
+          A.RandomShadow(
+            shadow_roi=(0, 0, 1, 0.05),
+            num_shadows_limit=(2,2),
+            shadow_dimension=5,
+            shadow_intensity_range=(0.85, 0.85),
+            p=1.0,
+          ),
+          A.RandomShadow(
+            shadow_roi=(0, 0.80, 1, 1),
+            num_shadows_limit=(2,2),
+            shadow_dimension=5,
+            shadow_intensity_range=(0.85, 0.85),
+            p=1.0,
+          ),
+          A.RandomGamma(
+            gamma_limit=(100, 400),  # ScaleIntType
+            always_apply=None,  # bool | None
+            p=1.0,  # float
           ),
           # A.Spatter(
           #   mean=(0.65, 0.65),
