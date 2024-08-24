@@ -26,7 +26,6 @@ from utils.utils import create_logger
 from PIL import Image
 import cv2
 
-
 from torch.nn import functional as F
 
 def parse_args():
@@ -132,10 +131,13 @@ def main():
 
 
       # pre-process
-      image = cv2.imread('/content/shoga-sem-segmentation-14030515-6/train/02PFK-LUCID_TRI071S-M_221100697__20240303170004096_image0_jpg.rf.4790abc021f81ff62ecb0ddc37c78d2a.jpg', 0) 
+      image = cv2.imread('/content/shoga-sem-segmentation-14030515-8/train/02PFK-LUCID_TRI071S-M_221100697__20240303170004096_image0_jpg.rf.4790abc021f81ff62ecb0ddc37c78d2a.jpg', 0) 
       image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
       print(f"[IMAGE SHAPE] : {image.shape}")
-      image = image.astype(np.float32)
+      # image = image.astype(np.float32)
+    
+      image = cv2.convertScaleAbs(image, alpha=1.09, beta=1.09).astype(np.float32)
+
       image = image / 255.0
       image -= [0.485, 0.456, 0.406]
       image /= [0.229, 0.224, 0.225]
@@ -143,8 +145,6 @@ def main():
       im.save("/content/PIDNet/handmade_trace_input.jpg")
       # raise Exception("stopped here!")
       example = torch.tensor(image).permute((2,0,1)).unsqueeze(0)
-      
-      
 
       # process
       model.eval()
@@ -238,4 +238,3 @@ class PIDNetWrapper(nn.Module):
 
 if __name__ == '__main__':
     main()
-
