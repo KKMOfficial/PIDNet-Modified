@@ -130,8 +130,8 @@ class CamVid(BaseDataset):
             p=1.0, 
           ),
           A.RandomBrightnessContrast(
-            brightness_limit=(0.09, 0.09),
-            contrast_limit=(0.09, 0.09),
+            brightness_limit=(0.03, 0.2),
+            contrast_limit=(0.03, 0.2),
             p=1.0,
           ),
           # A.Spatter(
