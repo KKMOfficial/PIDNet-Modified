@@ -24,8 +24,8 @@ class CamVid(BaseDataset):
                  base_size, 
                  crop_size,
                  scale_factor=1,
-                 mean=[0,0,0],#[0.485, 0.456, 0.406], 
-                 std=[1,1,1],#[0.229, 0.224, 0.225],
+                 mean=[0.610],#[0.485, 0.456, 0.406], 
+                 std=[0.310],#[0.229, 0.224, 0.225],
                  bd_dilate_size=0):
 
         super(CamVid, self).__init__(ignore_label, base_size,
