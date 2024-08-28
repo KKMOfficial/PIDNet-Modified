@@ -118,7 +118,7 @@ def validate(config, testloader, model, writer_dict
                                       transformed_images=transformed_images,
                                       transformed_labels=transformed_labels,
                                       label2color=test_dataset.label2color,
-                                      output_tag="__VAL__"
+                                      output_tag="__TEST__"
                                       )
             if not isinstance(pred, (list, tuple)):
                 pred = [pred]
