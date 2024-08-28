@@ -89,7 +89,11 @@ def train(config, epoch, num_epoch, epoch_iters, base_lr,
                       ave_acc.average(), avg_sem_loss.average(), avg_bce_loss.average(),ave_loss.average()-avg_sem_loss.average()-avg_bce_loss.average())
             logging.info(msg)
 
-    writer.add_scalar('train_loss', ave_loss.average(), global_steps)
+    # log train loss
+    writer.add_scalar('train_avg_loss', ave_loss.average(), writer_dict['train_global_steps'])
+    writer.add_scalar('train_avg_accuracy', ave_acc.average(), writer_dict['train_global_steps'])
+
+
     writer_dict['train_global_steps'] = global_steps + 1
     if not train_dataset is None:
       train_dataset.get_transformed_image = False
@@ -136,8 +140,8 @@ def validate(config, testloader, model, writer_dict
                     config.TRAIN.IGNORE_LABEL
                 )
 
-            if idx % 10 == 0:
-                print(idx)
+            # if idx % 10 == 0:
+            #     print(idx)
 
             loss = losses.mean()
             ave_loss.update(loss.item())
@@ -231,7 +235,7 @@ def mask_overlay(image, mask):
 
 
 def test(config, test_dataset, testloader, model,
-         sv_dir='./', sv_pred=True, img_dc="/content/shoga-sem-segmentation-14030515-6/test/"):
+         sv_dir='./', sv_pred=True, img_dc="/content/shoga-sem-segmentation-14030515-23/test/"):
     model.eval()
     test_dataset.get_transformed_image=True
     with torch.no_grad():
