@@ -137,11 +137,11 @@ def main():
       # image = image.astype(np.float32)
     
       # image = cv2.convertScaleAbs(image, alpha=1.09, beta=1.09).astype(np.float32)
-      image = 1.09*image+22.95;  
+      # image = 1.09*image+22.95;  
 
       image = image / 255.0
-      image -= [0.485, 0.456, 0.406]
-      image /= [0.229, 0.224, 0.225]
+      # image -= [0.485, 0.456, 0.406]
+      # image /= [0.229, 0.224, 0.225]
       im = Image.fromarray(image.astype(np.uint8))
       im.save("/content/PIDNet/handmade_trace_input.jpg")
       # raise Exception("stopped here!")
