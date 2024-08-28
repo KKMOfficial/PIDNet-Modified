@@ -17,8 +17,8 @@ class BaseDataset(data.Dataset):
                  base_size=2048,
                  crop_size=(512, 1024),
                  scale_factor=16,
-                 mean=[0.485, 0.456, 0.406],
-                 std=[0.229, 0.224, 0.225]):
+                 mean=[0,0,0],#[0.485, 0.456, 0.406],
+                 std=[1,1,1],):#[0.229, 0.224, 0.225]):
 
         self.base_size = base_size
         self.crop_size = crop_size
