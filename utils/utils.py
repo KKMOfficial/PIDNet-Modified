@@ -80,7 +80,7 @@ class FullModel(nn.Module):
     # print(f"[UTILS] : output unique values = {np.unique(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))}")
     # print(f"[UTILS] : transformed output shape is {transformed_outputs.shape}")
 
-    if (writer is not None) and ((i_iter%10==1)or(output_tag=="__VAL__")):
+    if (writer is not None) and ((i_iter%10==1)or(output_tag=="__TEST__")):
         grid_image = torchvision.utils.make_grid(transformed_images.permute((0,3,1,2)))[None,:,:,:]
         if not label2color is None:
             transformed_outputs = torch.tensor(label2color(np.argmax(outputs[-2].detach().cpu().numpy(), axis=1))).permute((0,3,1,2))
