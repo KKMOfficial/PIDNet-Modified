@@ -16,6 +16,7 @@ import torch.nn as nn
 import torch.backends.cudnn as cudnn
 import torch.optim
 from tensorboardX import SummaryWriter
+from tqdm import tqdm
 
 import _init_paths
 import models
@@ -100,6 +101,18 @@ def main():
                         base_size=config.TRAIN.BASE_SIZE,
                         crop_size=crop_size,
                         scale_factor=config.TRAIN.SCALE_FACTOR)
+
+
+    # x = []
+    # train_dataset.get_transformed_image=True
+    # for image in tqdm(range(train_dataset.__len__())[:2]):
+    #   x += [train_dataset.__getitem__(image)[-1]]
+    # train_dataset.get_transformed_image=False
+    # print(f"[TRAIN] : X = {x}")
+    # x = np.array(x)
+    # print(f"[TRAIN] : X.shape = {x.shape}")
+    # print(f"[TRAIN] : Average = {x.mean()}")
+      
 
     trainloader = torch.utils.data.DataLoader(
         train_dataset,
