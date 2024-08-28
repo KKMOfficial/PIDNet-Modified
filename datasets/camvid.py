@@ -145,11 +145,11 @@ class CamVid(BaseDataset):
           # ),
         ])
         self.null_transform = A.Compose([
-          A.RandomBrightnessContrast(
-            brightness_limit=(0.09, 0.09),
-            contrast_limit=(0.09, 0.09),
-            p=1.0,
-          ),
+          # A.RandomBrightnessContrast(
+          #   brightness_limit=(0.09, 0.09),
+          #   contrast_limit=(0.09, 0.09),
+          #   p=1.0,
+          # ),
         ])
     
     def read_files(self):
